@@ -56,6 +56,7 @@ def update_log(A,Z):
     nld_log_file.dropna(subset=['Datafile'],inplace = True)
     nld_log_file = nld_log_file.reset_index()
     nld_log_file[['B','C','D','E','file']] = nld_log_file['Datafile'].str.split("\\",expand=True)
+    nld_log_file.drop(['B','C','D','E'],axis=1,inplace=True)
     #nld_log_file['file'] = nld_log_file['file'].str.replace('.dat','.csv')
     # drop the datafile column because I will display the data on the website itself.
     nld_log_file.drop('Datafile',inplace=True,axis=1)
