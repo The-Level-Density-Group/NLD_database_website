@@ -76,7 +76,7 @@ def update_log(A,Z):
 
 def selected_log_book(selected_rows,i,A,Z):
     log_data = update_log(A,Z)
-    log_data_df = pd.DataFrame(log_data,columns=['ID','Nucleus','Z','A','Emin','Emax','Reaction','Method','Reference','Author','Validation','NR_flag','Comments','B','C','D','E','file'])
+    log_data_df = pd.DataFrame(log_data,columns=['ID','Nucleus','Z','A','Emin','Emax','Reaction','Method','Reference','Author','Validation','Comments','file'])
     log_data_selected = log_data_df[log_data_df['ID'] == i]
 
     nld_folder = str(Z) + '_' + str(A) # data folder is formatted as Z_A
