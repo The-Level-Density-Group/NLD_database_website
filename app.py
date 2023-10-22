@@ -5,30 +5,36 @@ import pandas as pd
 import numpy as np
 import os
 
+df_NLD = pd.read_csv('Arranged_data.csv',header=0)
+
 app = Dash(__name__)
 
 app.layout = html.Div([
     html.H1(children='The Level Density Project',style={'textAlign':'center'}),
-    html.H6(children='Enter mass number'),
+    html.Br(),
     html.Div([
-        "A: ",
-        dcc.Input(id='mass-number', type='number')
+        "Mass Number (A): ",
+        dcc.Dropdown(df_NLD['A'].sort_values().unique(),id='mass-number')
     ]),
-    html.H6(children='Enter proton number'),
+
+    html.Br(),
     html.Div([
-        "Z: ",
-        dcc.Input(id='proton-number', type='number')
+        "Proton Number (Z): ",
+        dcc.Dropdown(id='proton-number',placeholder='Select',value='Initial value')
     ]),
-    html.H6(children='Enter ID'),
-    html.Div([
-        "ID: ",
-        dcc.Input(id='index', type='number')
-    ]),
+
     html.Br(),
     html.Div([
     dash_table.DataTable(data=[],
-        id = 'data_log_table'        
-    )]),
+    id = 'data_log_table')]), 
+
+    html.Br(),
+    html.Div([
+        "Enter ID: ",
+        dcc.Input(id='index', type='number')
+    ]),
+    
+    html.Br(),
     html.Div([
     dash_table.DataTable(data=[],
         id = 'selected_data'        
@@ -39,10 +45,25 @@ app.layout = html.Div([
         id = 'datatable'        
     )]),
     html.Hr(),
-    dcc.RadioItems(options=['linear','log'],value=1,id='controls-and-radio-item'),
-    dcc.Graph(figure={},id='controls-and-graph')
+    html.Div([dcc.RadioItems(options=['linear','log'],value=1,id='controls-and-radio-item'),
+    dcc.Graph(figure={},id='controls-and-graph')]),
+
+    html.Div(
+    [
+        html.Button("Download CSV", id="btn_csv"),
+        dcc.Download(id="download-dataframe-csv"),
+    ]
+)
 
 ])
+
+@callback(
+    Output('proton-number','options'),
+    Input('mass-number','value')
+)
+
+def update_Z_dropdown(value):
+    return df_NLD['Z'][df_NLD['A'] == value].sort_values().unique()
 
 @callback(
     Output(component_id='data_log_table', component_property='data'),
@@ -140,6 +161,22 @@ def log_plot(selected_rows,scale,i,A,Z):
         fig = px.scatter(df,x='E (MeV)',y='NLD',log_y=True,error_y='NLD uncertainity')
 
     return fig
+
+@callback(
+    Output("download-dataframe-csv", "data"),
+    Input("btn_csv", "n_clicks"),
+    [State('mass-number','value'),
+    State('proton-number','value'),
+    State(component_id='data_log_table',component_property='selected_rows'),
+    State(component_id='index',component_property='value')],
+    prevent_initial_call=True,
+)
+def func(n_clicks,A,Z,selected_rows,i):
+    df = selected_log_book(selected_rows,i,A,Z)[0]
+    author = df_NLD['Author'][(df_NLD['A'] == A) & (df_NLD['Z'] == Z)]
+    filename = "NLD" + '_' + str(A) + '_' + str(Z) + '_' + author + ".csv"
+    return dcc.send_data_frame(df.to_csv, filename)
+
 
 if __name__ == '__main__':
     app.run(debug=True)
