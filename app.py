@@ -173,9 +173,10 @@ def log_plot(selected_rows,scale,i,A,Z):
 )
 def func(n_clicks,A,Z,selected_rows,i):
     df = selected_log_book(selected_rows,i,A,Z)[0]
-    author = df_NLD['Author'][(df_NLD['A'] == A) & (df_NLD['Z'] == Z)]
-    filename = "NLD" + '_' + str(A) + '_' + str(Z) + '_' + author + ".csv"
-    return dcc.send_data_frame(df.to_csv, filename)
+    df = pd.DataFrame.from_dict(df)
+    author = str(df_NLD['Author'][(df_NLD['A'] == A) & (df_NLD['Z'] == Z) & (df_NLD['ID'] == i)])
+    name = "NLD" + '_' + str(A) + '_' + str(Z) + '_' + author
+    return dcc.send_data_frame(df.to_csv,filename=name+".csv")
 
 
 if __name__ == '__main__':
