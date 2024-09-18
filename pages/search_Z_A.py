@@ -373,7 +373,7 @@ def plot_selected_data(derived_virtual_selected_rows,value,value_fit,n_clicks,da
                 fig = blank_figure()
                 Z = data_df['Z'][i]
                 A = data_df['A'][i]
-                datafile = '../' + data_df['Datafile'][i]
+                datafile = data_df['Datafile'][i]
 
                 # minimum and maximum energy of fitting.
                 E_min = data_df['Emin'][i]
@@ -566,7 +566,7 @@ def plot_selected_data(derived_virtual_selected_rows,value,value_fit,n_clicks,da
             
             Z = data_df['Z'][i]
             A = data_df['A'][i]
-            datafile = '../' + data_df['Datafile'][i]
+            datafile = data_df['Datafile'][i]
             
             E_min = data_df['Emin'][i]
             E_max = data_df['Emax'][i]
@@ -761,7 +761,7 @@ def create_zip(n_clicks_download,selected_rows, data, div_graphs_children,n_clic
     with zipfile.ZipFile(buffer, "w") as zf:
         data_df = pd.DataFrame.from_dict(data)
         selected_df = data_df.iloc[selected_rows]
-        selected_data_sets = '../' + selected_df['Datafile']
+        selected_data_sets = selected_df['Datafile']
 
         for ind,i in enumerate(selected_rows):
             csv_data_set = pd.read_csv(selected_data_sets[i],comment='#',header=None)
