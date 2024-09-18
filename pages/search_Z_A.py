@@ -36,7 +36,7 @@ import scipy.stats as stats
 dash.register_page(__name__,title='Search by Z and A',name='Search by Z and A')
 
 # load the main log file.
-df_NLD = pd.read_excel('../OhioUniversity/PhD/NLDD/data_sets/log_book_new.xlsx')
+df_NLD = pd.read_excel('../log_book_new.xlsx')
 
 # By default Plotly displays a blank plotting area on the webpage. This function is made to avoid displaying that once the webpage is loaded.
 
@@ -373,14 +373,14 @@ def plot_selected_data(derived_virtual_selected_rows,value,value_fit,n_clicks,da
                 fig = blank_figure()
                 Z = data_df['Z'][i]
                 A = data_df['A'][i]
-                datafile = data_df['Datafile'][i]
+                datafile = '../' + data_df['Datafile'][i]
 
                 # minimum and maximum energy of fitting.
                 E_min = data_df['Emin'][i]
                 E_max = data_df['Emax'][i]
 
                 # location of csv data file.
-                file_loc = '../OhioUniversity/PhD/NLDD/data_sets/' + datafile
+                file_loc = datafile
                 nld_data = pd.read_csv(file_loc,header=None,sep=',',comment='#')
 
                 unnamed_cols = nld_data.filter(like='3').columns
@@ -566,13 +566,13 @@ def plot_selected_data(derived_virtual_selected_rows,value,value_fit,n_clicks,da
             
             Z = data_df['Z'][i]
             A = data_df['A'][i]
-            datafile = data_df['Datafile'][i]
+            datafile = '../' + data_df['Datafile'][i]
             
             E_min = data_df['Emin'][i]
             E_max = data_df['Emax'][i]
 
             
-            file_loc = '../OhioUniversity/PhD/NLDD/data_sets/' + datafile
+            file_loc = datafile
 
             nld_data = pd.read_csv(file_loc,header=None,sep=',',comment='#')
 
@@ -761,7 +761,7 @@ def create_zip(n_clicks_download,selected_rows, data, div_graphs_children,n_clic
     with zipfile.ZipFile(buffer, "w") as zf:
         data_df = pd.DataFrame.from_dict(data)
         selected_df = data_df.iloc[selected_rows]
-        selected_data_sets = '../OhioUniversity/PhD/NLDD/data_sets/' + selected_df['Datafile']
+        selected_data_sets = '../' + selected_df['Datafile']
 
         for ind,i in enumerate(selected_rows):
             csv_data_set = pd.read_csv(selected_data_sets[i],comment='#',header=None)
