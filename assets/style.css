@@ -1,0 +1,435 @@
+/* ---------------------- Header Section ------------------------ */
+.website_header {
+	font-size: 62px;
+    font-family: 'Helvetica';
+    font-weight: bold;
+	text-align: center;
+	color: white;
+    /*background: linear-gradient(135deg, rgba(255, 165, 0, 0.8), rgba(255, 0, 0, 0.5));*/
+	margin: 20px;
+	padding-bottom: 100px;
+    padding-top: 100px;
+
+}
+
+.header_banner_link {
+    color: orange;
+    text-decoration: none;
+
+}
+
+.website_header_database {
+    font-size: 62px;
+    font-family: 'Helvetica';
+    font-weight: bold;
+    text-align: center;
+    color: white;
+    background: #F28C28;
+    margin: 20px 0 5px 0;
+    padding-bottom: 50px;
+    padding-top: 50px;
+
+}
+
+.header_banner_link_database {
+    color: orange;
+    text-decoration: none;
+
+}
+
+#banner_hr {
+    width: 100%;
+    height: 2px;
+    border-top: 1px solid white;
+    margin-top: 5px;
+    padding-bottom: 20px;
+}
+
+body {
+    color: orange;
+    background: rgb(30,30,30); /* Change this to your desired color */
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    width: 100%;
+}
+
+
+.counter {
+    font-size: 60px;
+    font-family: 'Helvetica'
+    font-weight: bold;
+    margin-top: 5px;
+    color: white;  /* Adjust the color as needed */
+    text-align: center;
+    vertical-align: center;
+}
+
+#dataset_counter {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 2px;          /* Adjust height as needed */
+}
+
+.dataset-counter-heading {
+    font-size: 40px;
+    font-family: 'Helvetica'
+    font-weight: bold;
+    text-align: center;
+}
+
+#dataset_heading {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 220px;
+}
+
+
+.database-btn {
+    margin-top: 10rem;
+    width: 20%;
+    height: 7vh;
+    color: orange;
+    background: rgb(30,30,30);
+    border: 2px solid orange;
+    border-radius: 15px;
+    position: relative;
+
+}
+
+#go_to_database_btn {
+    position: absolute;
+    left: 50%;
+    bottom: 10%;
+    transform: translateX(-50%);
+}
+
+.database-btn:hover {
+    background-color: #2F4F4F;
+}
+/* ----------------------- Navigation bar ------------------------ */
+
+.nav_bar {
+	background: #F28C28;
+	display: flex;
+	justify-content: center;
+	height: 40px;
+	color: black;
+	font-size: 20px;
+
+}
+
+.home_btn {
+	padding-right: 30px;
+	margin: 0;
+	font-size: 20px;
+	color: black;
+
+}
+
+.search_by_Z_A_btn {
+	padding-right: 30px;
+	margin: 0;
+	font-size: 20px;
+	color: black;
+
+}
+
+.search_by_method_btn {
+	padding-right: 30px;
+	font-size: 20px;
+	color: black;
+}
+
+.search_by_reaction_btn {
+	padding-right: 30px;
+	font-size: 20px;
+	color: black;
+}
+
+.search_by_status_btn {
+	font-size: 20px;
+	color: black;
+}
+
+.container.scalable {
+    width: 95%;
+    max-width: 100vw;
+    height: auto;
+}
+
+
+
+
+
+
+
+@media (min-width: 951px) {
+    #app-container {
+        width: 100%;
+        height: auto;
+        display: flex;
+        flex-direction: row;
+        align-items: flex-start;
+    }
+}
+
+.Select div {
+    color: orange;
+    background: #2F4F4F;
+    border: none;
+}
+
+.Select-menu-outer div:hover {
+    background-color: rgba(255, 255, 255, 0.01);
+}
+
+.Select-value-label {
+    color: orange !important;
+}
+
+
+#left-column {
+    width: 25%;
+    height: auto;
+    margin: 0;
+    padding: 0;
+}
+
+#center-column {
+    width: 75%;
+    height: auto;
+    margin: 0;
+    padding: 2rem;
+    
+}
+
+#search_criteria_header {
+    font-family: "Helvetica"
+    font-size: 14px;
+    margin-top: 1rem;
+}
+
+.input1 {
+    padding-top: 2rem !important;
+    margin-top: 1rem;
+    padding-bottom: 0rem !important;
+    width: 100%;
+    background: #2F4F4F;
+    border: 2px solid orange;
+    border-radius: 5px;
+
+}
+
+
+.input2 {
+    padding-top: 2rem !important;
+    margin-top: 2rem;
+    padding-bottom: 0rem !important;
+    width: 100%;
+    background: #2F4F4F;
+    border: 2px solid orange;
+    border-radius: 5px;
+}
+
+#criteria_hr {
+    width: 100%;
+    height: 2px;
+    border-top: 2px solid white;
+    margin-top: 3rem;
+}
+
+.button1 {
+	margin-top: 10rem;
+    width: 100%;
+    height: 7vh;
+    color: orange;
+    background: rgb(30,30,30);
+    border: 2px solid orange;
+    border-radius: 15px;
+
+}
+
+
+.button1:hover {
+    background-color: #2F4F4F;
+}
+
+#search_by_reaction {
+    margin-top: 1rem;
+    color: orange !important; /* Text color */
+    background-color: rgb(63, 61, 61) !important; /* Background color */
+    border: 1px solid #555 !important; /* Border color */
+    border-radius: 5px !important; /* Rounded corners */
+    padding: 10px !important; /* Padding */
+    transition: background-color 0.3s, color 0.3s, border-color 0.3s;
+}
+
+#search_by_reaction::placeholder {
+    color: orange !important; /* Placeholder text color */
+    opacity: 1; /* Make sure the placeholder is fully opaque */
+}
+
+#search_by_reaction:focus {
+    border-color: orange !important; /* Border color when focused */
+    outline: none; /* Remove default focus outline */
+    box-shadow: 0 0 5px orange !important; /* Add a subtle shadow */
+}
+
+#status_btn {
+    margin-top: 1rem;
+}
+
+
+.button2 {
+    width: 100%;
+    height: 7vh;
+    margin-top: 15rem;
+    color: orange;
+    background: rgb(30,30,30);
+    border: 2px solid orange;
+    border-radius: 15px;
+}
+
+.button2:hover {
+    background-color: #2F4F4F;
+}
+
+
+/*#data_log_table {
+    margin: 32px 32px 32px 20px;
+    width: 100%;
+	padding: 0;
+}
+*/
+
+
+.scaling-btn {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 20px;
+}
+
+.scaling-btn label {
+    color: orange;
+    font-size: 20px;
+}
+
+.scaling-btn .form-check-input:checked {
+    background-color: orange;
+    border-color: orange;
+}
+
+.radio-btn-fitting-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding-top: 20px;
+}
+
+.radio-btn-fitting-container label {
+    background-color: #F28C28;
+    color: black;
+    font-weight: bold;
+    border: 1px solid #F28C28;
+    border-radius: 5px;
+    padding: 10px 20px;
+    cursor: pointer;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.radio-btn-fitting-container label:hover {
+    background-color: #DC4D01;
+    border-color: #DC4D01;
+}
+
+.radio-btn-fitting-container input[type="radio"]:checked + label {
+    background-color: #DC4D01;
+    border-color: #DC4D01;
+}
+
+.radio-btn-fitting-container input[type="radio"] {
+    display: none;
+}
+
+
+#div-graphs {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: auto;
+    margin: 0;
+    padding: 0;
+
+    
+}
+
+
+
+
+/* ------------------------------- Homepage ----------------------------- */
+
+.intro_heading {
+	text-align: center;
+	font-style: sans-serif;
+    font-size: 20px;
+    padding-top: 10px;
+    margin: 0 10px 15px 20px;
+
+}
+.intro_paragraph {
+	font-style: sans-serif;
+	font-size: 20px;
+	display: block;
+}
+/* ----------------------- Search by Z and A section ----------------------- */
+
+.intro_Z_A {
+	text-align: center;
+	font-style: sans-serif;
+
+}
+
+
+
+
+
+/* ----------------------- Search by method section -------------------------- */
+
+.intro_method {
+	text-align: center;
+	font-style: sans-serif;
+
+}
+
+.radio_select_method label {
+	margin-right: 20px;
+	font-size: 20px;
+}
+
+.radio_select_method {
+	text-align: center;
+}
+
+/* ----------------------------------------- */
+
+
+
+.graph-grid {
+                display: grid;
+                grid-template-columns: repeat(2, 1fr);
+                gap: 20px;
+                width: 100%;
+            }
+.graph-item {
+                width: 100%;
+            }
+
+.sliders {
+
+	display: none;
+}
