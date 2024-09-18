@@ -5,7 +5,7 @@ import pandas as pd
 dash.register_page(__name__, path='/',title='Home',name='Home')
 
 # Load the main file that has information about all data sets.
-df_NLD = pd.read_excel('../OhioUniversity/PhD/NLDD/data_sets/log_book_new.xlsx')
+df_NLD = pd.read_excel('../log_book_new.xlsx')
 
 # layout of the homepage.
 layout = html.Div([
