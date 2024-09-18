@@ -4,7 +4,7 @@ import pandas as pd
 import dash_bootstrap_components as dbc
 
 
-df_NLD = pd.read_csv('../OhioUniversity/PhD/NLDD/24Mar_2023/Arranged_data.csv')
+df_NLD = pd.read_excel('../log_book_new.xlsx')
 
 def view():
     return \
