@@ -1,3 +1,8 @@
+# Core for Delivery
+gunicorn>=19.8.1
+dash>=1.0.0
+dash-bootstrap-components==1.0.2
+
 absl-py==2.0.0
 arviz==0.16.1
 astunparse==1.6.3
@@ -68,3 +73,5 @@ Werkzeug==3.0.0
 wrapt==1.14.1
 xarray==2023.11.0
 xarray-einstats==0.6.0
+
+openpyxl
