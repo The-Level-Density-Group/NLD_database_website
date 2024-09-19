@@ -445,16 +445,27 @@ def plot_selected_data(derived_virtual_selected_rows,value,value_fit,n_clicks,da
 
                 elif value_fit == 'BSFG':
 
-                    nld_data_fit = nld_data[(nld_data['E (MeV)'] > E_min) & (nld_data['E (MeV)'] < E_max+0.1)]
+                    N = A - Z
+
+                    if N%2 == 0 and Z%2 == 0:
+                        n = 2
+
+                    elif N%2 != 0 and Z%2 != 0:
+                        n = 0
+
+                    else:
+                        n = 1
+
+                    nld_data_fit = nld_data[(nld_data['E (MeV)'] > n*12/np.sqrt(A) + 0.173015) & (nld_data['E (MeV)'] < E_max+0.1)]
 
                     x,y,dy = nld_data_fit['E (MeV)'],nld_data_fit['NLD'],nld_data_fit['NLD uncertainity']
                
-                    popt, pcov = curve_fit(bsfg_fitting, xdata=x,ydata=y,sigma=dy,absolute_sigma=True)
+                    popt, pcov = curve_fit(lambda x,a,Delta: bsfg_fitting(x,a,Delta,A=A), xdata=x,ydata=y,sigma=dy, absolute_sigma=True)
                     print(popt)
 
-                    x_fit = np.linspace(E_min, E_max,100)
+                    x_fit = np.linspace(n*12/np.sqrt(A) + 0.173015, E_max,100)
 
-                    y_fit = bsfg_fitting(x_fit,*popt)
+                    y_fit = bsfg_fitting(x_fit,*popt,A)
 
                     param_errors = np.sqrt(np.diag(pcov))
 
@@ -464,8 +475,8 @@ def plot_selected_data(derived_virtual_selected_rows,value,value_fit,n_clicks,da
 
                     t_value = stats.t.ppf(1 - alpha/2, df=len(x_fit) - n_params)
 
-                    y_lower = bsfg_fitting(x_fit, *(popt - t_value * param_errors))
-                    y_upper = bsfg_fitting(x_fit, *(popt + t_value * param_errors))
+                    y_lower = bsfg_fitting(x_fit, *(popt - t_value * param_errors),A)
+                    y_upper = bsfg_fitting(x_fit, *(popt + t_value * param_errors),A)
 
 
                     fig.add_trace(go.Scatter(x=x_fit,y=y_fit,mode='lines',
@@ -481,15 +492,27 @@ def plot_selected_data(derived_virtual_selected_rows,value,value_fit,n_clicks,da
 
                 elif value_fit == 'All':
 
-                    nld_data_fit = nld_data[(nld_data['E (MeV)'] > E_min) & (nld_data['E (MeV)'] < E_max+0.1)]
+                    N = A - Z
+
+                    if N%2 == 0 and Z%2 == 0:
+                        n = 2
+
+                    elif N%2 != 0 and Z%2 != 0:
+                        n = 0
+
+                    else:
+                        n = 1
+
+                    nld_data_fit = nld_data[(nld_data['E (MeV)'] > n*12/np.sqrt(A) + 0.173015) & (nld_data['E (MeV)'] < E_max+0.1)]
 
                     x,y,dy = nld_data_fit['E (MeV)'],nld_data_fit['NLD'],nld_data_fit['NLD uncertainity']
                
-                    popt_bsfg, pcov_bsfg = curve_fit(bsfg_fitting, xdata=x,ydata=y,sigma=dy,absolute_sigma=True)
+                    popt_bsfg, pcov_bsfg = curve_fit(lambda x,a,Delta: bsfg_fitting(x,a,Delta,A=A), xdata=x,ydata=y,sigma=dy, absolute_sigma=True)
+                    
 
-                    x_fit = np.linspace(E_min, E_max,100)
+                    x_fit = np.linspace(n*12/np.sqrt(A) + 0.173015, E_max,100)
 
-                    y_fit_bsfg = bsfg_fitting(x_fit, *popt_bsfg)
+                    y_fit_bsfg = bsfg_fitting(x_fit,*popt_bsfg,A)
 
                     param_errors_bsfg = np.sqrt(np.diag(pcov_bsfg))
 
@@ -497,10 +520,10 @@ def plot_selected_data(derived_virtual_selected_rows,value,value_fit,n_clicks,da
 
                     n_params_bsfg = len(popt_bsfg)
 
-                    t_value_bsfg = stats.t.ppf(1 - alpha/2, df=len(x_fit) - n_params_bsfg)
+                    t_value = stats.t.ppf(1 - alpha/2, df=len(x_fit) - n_params_bsfg)
 
-                    y_lower_bsfg = bsfg_fitting(x_fit, *(popt_bsfg - t_value_bsfg * param_errors_bsfg))
-                    y_upper_bsfg = bsfg_fitting(x_fit, *(popt_bsfg + t_value_bsfg * param_errors_bsfg))
+                    y_lower_bsfg = bsfg_fitting(x_fit, *(popt_bsfg - t_value * param_errors_bsfg),A)
+                    y_upper_bsfg = bsfg_fitting(x_fit, *(popt_bsfg + t_value * param_errors_bsfg),A)
 
 
                     fig.add_trace(go.Scatter(x=x_fit,y=y_fit_bsfg,mode='lines',
@@ -513,6 +536,10 @@ def plot_selected_data(derived_virtual_selected_rows,value,value_fit,n_clicks,da
                     fig.add_trace(go.Scatter(x=x_fit, y=y_lower_bsfg, mode='lines', fill='tonexty',line=dict(dash='dash'),
                     showlegend=False))
 
+                    nld_data_fit = nld_data[(nld_data['E (MeV)'] > E_min) & (nld_data['E (MeV)'] < E_max+0.1)]
+
+                    x,y,dy = nld_data_fit['E (MeV)'],nld_data_fit['NLD'],nld_data_fit['NLD uncertainity']
+               
                     popt_ctm, pcov_ctm = curve_fit(ctm_fitting, xdata=x,ydata=y,sigma=dy,absolute_sigma=True)
 
                     x_fit = np.linspace(E_min, E_max,100)
@@ -532,7 +559,7 @@ def plot_selected_data(derived_virtual_selected_rows,value,value_fit,n_clicks,da
 
 
                     fig.add_trace(go.Scatter(x=x_fit,y=y_fit_ctm,mode='lines',
-                        name='a = {}, del = {}, da = {}, ddel = {}'.format(np.round(popt_ctm[0],2),np.round(popt_ctm[1],2),
+                        name='T = {}, E0 = {}, dT = {}, dE0 = {}'.format(np.round(popt_ctm[0],2),np.round(popt_ctm[1],2),
                         np.round(param_errors_ctm[0],2),np.round(param_errors_ctm[1],2))))
 
                     fig.add_trace(go.Scatter(x=x_fit, y=y_upper_ctm, mode='lines', fill=None,line=dict(dash='dash'), 
@@ -640,15 +667,27 @@ def plot_selected_data(derived_virtual_selected_rows,value,value_fit,n_clicks,da
 
             elif value_fit == 'BSFG':
 
-                nld_data_fit = nld_data[(nld_data['E (MeV)'] > E_min) & (nld_data['E (MeV)'] < E_max+0.1)]
+                N = A - Z
+
+                if N%2 == 0 and Z%2 == 0:
+                    n = 2
+
+                elif N%2 != 0 and Z%2 != 0:
+                    n = 0
+
+                else:
+                    n = 1
+
+                nld_data_fit = nld_data[(nld_data['E (MeV)'] > n*12/np.sqrt(A) + 0.173015) & (nld_data['E (MeV)'] < E_max+0.1)]
 
                 x,y,dy = nld_data_fit['E (MeV)'],nld_data_fit['NLD'],nld_data_fit['NLD uncertainity']
                
-                popt, pcov = curve_fit(bsfg_fitting, xdata=x,ydata=y,sigma=dy,absolute_sigma=True)
+                popt, pcov = curve_fit(lambda x,a,Delta: bsfg_fitting(x,a,Delta,A=A), xdata=x,ydata=y,sigma=dy, absolute_sigma=True)
+                #print(popt)
 
-                x_fit = np.linspace(E_min, E_max,100)
+                x_fit = np.linspace(n*12/np.sqrt(A) + 0.173015, E_max,100)
 
-                y_fit = bsfg_fitting(x_fit, *popt)
+                y_fit = bsfg_fitting(x_fit,*popt,A)
 
                 param_errors = np.sqrt(np.diag(pcov))
 
@@ -658,8 +697,8 @@ def plot_selected_data(derived_virtual_selected_rows,value,value_fit,n_clicks,da
 
                 t_value = stats.t.ppf(1 - alpha/2, df=len(x_fit) - n_params)
 
-                y_lower = bsfg_fitting(x_fit, *(popt - t_value * param_errors))
-                y_upper = bsfg_fitting(x_fit, *(popt + t_value * param_errors))
+                y_lower = bsfg_fitting(x_fit, *(popt - t_value * param_errors),A)
+                y_upper = bsfg_fitting(x_fit, *(popt + t_value * param_errors),A)
 
 
                 fig.add_trace(go.Scatter(x=x_fit,y=y_fit,mode='lines',
@@ -674,15 +713,27 @@ def plot_selected_data(derived_virtual_selected_rows,value,value_fit,n_clicks,da
 
             elif value_fit == 'All':
 
-                nld_data_fit = nld_data[(nld_data['E (MeV)'] > E_min) & (nld_data['E (MeV)'] < E_max+0.1)]
+                N = A - Z
+
+                if N%2 == 0 and Z%2 == 0:
+                    n = 2
+
+                elif N%2 != 0 and Z%2 != 0:
+                    n = 0
+
+                else:
+                    n = 1
+
+                nld_data_fit = nld_data[(nld_data['E (MeV)'] > n*12/np.sqrt(A) + 0.173015) & (nld_data['E (MeV)'] < E_max+0.1)]
 
                 x,y,dy = nld_data_fit['E (MeV)'],nld_data_fit['NLD'],nld_data_fit['NLD uncertainity']
                
-                popt_bsfg, pcov_bsfg = curve_fit(bsfg_fitting, xdata=x,ydata=y,sigma=dy,absolute_sigma=True)
+                popt_bsfg, pcov_bsfg = curve_fit(lambda x,a,Delta: bsfg_fitting(x,a,Delta,A=A), xdata=x,ydata=y,sigma=dy, absolute_sigma=True)
+                #print(popt)
 
-                x_fit = np.linspace(E_min, E_max,100)
+                x_fit = np.linspace(n*12/np.sqrt(A) + 0.173015, E_max,100)
 
-                y_fit_bsfg = bsfg_fitting(x_fit, *popt_bsfg)
+                y_fit_bsfg = bsfg_fitting(x_fit,*popt_bsfg,A)
 
                 param_errors_bsfg = np.sqrt(np.diag(pcov_bsfg))
 
@@ -690,10 +741,10 @@ def plot_selected_data(derived_virtual_selected_rows,value,value_fit,n_clicks,da
 
                 n_params_bsfg = len(popt_bsfg)
 
-                t_value_bsfg = stats.t.ppf(1 - alpha/2, df=len(x_fit) - n_params_bsfg)
+                t_value = stats.t.ppf(1 - alpha/2, df=len(x_fit) - n_params_bsfg)
 
-                y_lower_bsfg = bsfg_fitting(x_fit, *(popt_bsfg - t_value_bsfg * param_errors_bsfg))
-                y_upper_bsfg = bsfg_fitting(x_fit, *(popt_bsfg + t_value_bsfg * param_errors_bsfg))
+                y_lower_bsfg = bsfg_fitting(x_fit, *(popt_bsfg - t_value * param_errors_bsfg),A)
+                y_upper_bsfg = bsfg_fitting(x_fit, *(popt_bsfg + t_value * param_errors_bsfg),A)
 
 
                 fig.add_trace(go.Scatter(x=x_fit,y=y_fit_bsfg,mode='lines',
@@ -706,6 +757,7 @@ def plot_selected_data(derived_virtual_selected_rows,value,value_fit,n_clicks,da
                 fig.add_trace(go.Scatter(x=x_fit, y=y_lower_bsfg, mode='lines', fill='tonexty',line=dict(dash='dash'),
                  showlegend=False))
 
+                nld_data_fit = nld_data[(nld_data['E (MeV)'] > E_min) & (nld_data['E (MeV)'] < E_max+0.1)]
 
                 popt_ctm, pcov_ctm = curve_fit(ctm_fitting, xdata=x,ydata=y,sigma=dy,absolute_sigma=True)
 
@@ -726,7 +778,7 @@ def plot_selected_data(derived_virtual_selected_rows,value,value_fit,n_clicks,da
 
 
                 fig.add_trace(go.Scatter(x=x_fit,y=y_fit_ctm,mode='lines',
-                    name='a = {}, del = {}, da = {}, ddel = {}'.format(np.round(popt_ctm[0],2),np.round(popt_ctm[1],2),
+                    name='T = {}, E0 = {}, dT = {}, dE0 = {}'.format(np.round(popt_ctm[0],2),np.round(popt_ctm[1],2),
                         np.round(param_errors_ctm[0],2),np.round(param_errors_ctm[1],2))))
 
                 fig.add_trace(go.Scatter(x=x_fit, y=y_upper_ctm, mode='lines', fill=None,line=dict(dash='dash'), 
