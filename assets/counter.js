@@ -13,7 +13,7 @@ function counter_animation() {
 
             // Set up an interval to update the counter every 50 milliseconds
         const interval = setInterval(() => {
-            currentNumber += 2;  // Increment the current number
+            currentNumber += 1;  // Increment the current number
             counter.textContent = currentNumber;  // Update the counter text content
             console.log('Current number:', currentNumber);  // Log the current number
 
