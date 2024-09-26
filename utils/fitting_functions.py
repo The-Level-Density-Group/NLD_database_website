@@ -26,19 +26,14 @@ def liquid_drop_mass(A,Z):
 	return M_n*N + M_H*Z + E_vol + E_sur + E_coul + delta_m
 
 
-def bsfg_fitting(E, a, Delta,A):
+def bsfg_fitting(E, a, Delta):
+    # Condition to handle low energies
+    # a_tilde = 0.0722396*A + 0.195267 * A**(2/3) 
+    # sigma = np.sqrt(0.01389 * A**(5/3)/a_tilde * np.sqrt(np.abs(E - Delta) * a))
 
-	#delta = n*12/np.sqrt(A) + 0.173015
-
-	U = E - Delta
-
-	
-	a_tilde = 0.0722396*A + 0.195267 * A**(2/3) 
-
-	sigma = np.sqrt(0.01389 * A**(5/3)/a_tilde * np.sqrt(U * a))
-	rho_F = 1/(np.sqrt(2*np.pi) * sigma) * np.sqrt(np.pi)/12 * np.exp(2 * np.sqrt(a * U))/(a**0.25 * U**1.25)
-
-	return rho_F
+    rho = (np.sqrt(np.pi) / 12) * (np.exp(2 * np.sqrt(a * (E - Delta))) / 
+                          (a**0.25 * (E - Delta)**1.25))
+    return rho
 
 
 def ctm_fitting(x_data,T,E0):
