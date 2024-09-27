@@ -626,8 +626,8 @@ def plot_selected_data(derived_virtual_selected_rows,value,value_fit,n_clicks,da
                 E_max = data_df['Emax'][i]
 
                 # location of csv data file.
-                file_loc = '../OhioUniversity/PhD/NLDD/data_sets/' + datafile
-                nld_data = pd.read_csv(file_loc,header=None,sep=',',comment='#')
+                #file_loc = '../OhioUniversity/PhD/NLDD/data_sets/' + datafile
+                nld_data = pd.read_csv(datafile,header=None,sep=',',comment='#')
 
                 unnamed_cols = nld_data.filter(like='3').columns
                 if not unnamed_cols.empty:
@@ -818,9 +818,9 @@ def plot_selected_data(derived_virtual_selected_rows,value,value_fit,n_clicks,da
             E_max = data_df['Emax'][i]
 
             
-            file_loc = '../OhioUniversity/PhD/NLDD/data_sets/' + datafile
+            #file_loc = '../OhioUniversity/PhD/NLDD/data_sets/' + datafile
 
-            nld_data = pd.read_csv(file_loc,header=None,sep=',',comment='#')
+            nld_data = pd.read_csv(datafile,header=None,sep=',',comment='#')
 
             unnamed_cols = nld_data.filter(like='3').columns
             if not unnamed_cols.empty:
@@ -1007,7 +1007,7 @@ def create_zip(n_clicks_download,selected_rows, data, div_graphs_children,n_clic
     with zipfile.ZipFile(buffer, "w") as zf:
         data_df = pd.DataFrame.from_dict(data)
         selected_df = data_df.iloc[selected_rows]
-        selected_data_sets = '../OhioUniversity/PhD/NLDD/data_sets/' + selected_df['Datafile']
+        selected_data_sets = selected_df['Datafile']
 
         for ind,i in enumerate(selected_rows):
             csv_data_set = pd.read_csv(selected_data_sets[i],comment='#',header=None)
