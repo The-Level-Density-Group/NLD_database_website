@@ -19,7 +19,7 @@ layout = html.Div([
      scattering wavelet technique etc. You can search for datasets using the proton number and mass number or filter the datasets by the methods or \
      search by the type of reaction or filter the datasets by their staus (Accepted, Rejected or Probation). You can also fit any selected datasets \
      to the constant temperature (CT) model and the back-shifted Fermi gas (BSFG) model. This database has been made possible by the contributions of Chirag Rathi, \
-      Dr. Alexander Voinov, Dr. Zach Meisel and Dr. Kyle Godbey.',className='intro_heading'),
+      Dr. Alexander Voinov, Kristen Leibensperger, Dr. Zach Meisel and Dr. Kyle Godbey.',className='intro_heading'),
 
 
     html.H4('Total Number of Available Datasets',className='dataset-counter-heading',id='dataset_heading'),
@@ -31,7 +31,7 @@ layout = html.Div([
     html.A(html.Button('Go to Database', id='go_to_database_btn',className='database-btn'),href='/search-z-a'),
 
     html.P(['If you would like to submit your dataset to this database or if you would like to inquire about an available dataset, please forward \
-    	your queries to ',html.A('Dr. Alexander Voinov', href='mailto:voinov@ohio.edu',style={'color':'orange'})],
+    	your queries to ',html.A('The Level Density Group', href='mailto:theleveldensitygroup@gmail.com',style={'color':'orange'})],
         style={'textAlign':'center','font-size':'16px','margin-top':'12rem','font-weight':'bold'}),
 
 
