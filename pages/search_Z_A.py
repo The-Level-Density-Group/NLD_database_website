@@ -36,7 +36,8 @@ import scipy.stats as stats
 dash.register_page(__name__,title='Search by Z and A',name='Search by Z and A')
 
 # load the main log file.
-df_NLD = pd.read_excel('../OhioUniversity/PhD/NLDD/data_sets/log_book_new.xlsx')
+df_NLD = pd.read_excel('log_book_new.xlsx')
+
 
 # By default Plotly displays a blank plotting area on the webpage. This function is made to avoid displaying that once the webpage is loaded.
 

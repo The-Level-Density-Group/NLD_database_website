@@ -1,0 +1,19 @@
+version: '3.7'
+services:
+
+  nld-db:
+    image: ghcr.io/the-level-density-group/nld_database_website:master
+    container_name: nld-db
+    ports:
+      - 80:80
+    restart: unless-stopped
+    volumes:
+      - /srv/nld-db:/nld-db-host
+  watchtower:
+    image: containrrr/watchtower
+    container_name: watchtower
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    environment:
+      - WATCHTOWER_CLEANUP=true
+    command: nld-db
