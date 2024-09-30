@@ -86,7 +86,7 @@ body {
     height: 220px;
 }
 
-
+/*
 .database-btn {
     margin-top: 10rem;
     width: 20%;
@@ -97,7 +97,21 @@ body {
     border-radius: 15px;
     position: relative;
 
+}*/
+
+.database-btn {
+    position: fixed;
+    top: 80vh; /* Positions the button 50% down the viewport */
+    left: 40vw; /* Positions the button 40% from the left of the viewport */
+    transform: translate(-50%, -50%); /* Adjusts for button width and height */
+    width: 20%; 
+    height: 7vh;
+    color: orange;
+    background: rgb(30,30,30);
+    border: 2px solid orange;
+    border-radius: 15px;
 }
+
 
 #go_to_database_btn {
     position: absolute;
