@@ -140,7 +140,7 @@ def update_table(A, Z, value_method, value_reaction, value_status):
     filtered_df.dropna(subset=['Datafile'],inplace=True)
     full_data_store.dropna(subset=['Datafile'],inplace=True)
 
-    columns_to_hide = ['ID', 'Datafile', 'Author']
+    columns_to_hide = ['ID', 'Datafile', 'Author','Distance','Status']
     visible_df = filtered_df.drop(columns_to_hide, axis=1)
     
     return [visible_df.to_dict('records'),full_data_store.to_dict('records')]
