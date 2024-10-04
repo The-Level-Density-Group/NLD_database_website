@@ -39,7 +39,17 @@ def view():
                 
             ]),
 
-            html.Div(id='center-column', children=[html.Div([dash_table.DataTable(data=[],id='data_log_table',row_selectable='multi',
+            html.Div(id='center-column', children=[html.Div([dash_table.DataTable(data=[],id='data_log_table', 
+                #columns=[{'id': c, 'name': c} for c in df_NLD.columns],
+                tooltip_header={
+                'Emin': 'Minimum energy value used for the fitting',
+                'Emax': 'Maximum energy value used for the fitting',
+                'Exrange': 'Emax - Emin',
+                'Method': 'Method by which level densities were extracted',
+                'Reaction':'Primary reaction used for level density extraction',
+                'Deformation':'Deformation of the nucleus (extracted from NNDC)'
+                },
+                row_selectable='multi',
                 style_table={'width': '100%','overflowX':'auto'},
 
                 style_header={'backgroundColor': 'rgb(30,30,30)','color': 'orange','border':'2px solid white'},
@@ -57,7 +67,7 @@ def view():
             value='linear',id="radio_btn",inline=True,switch=True),className='scaling-btn'),
 
                 html.Div(dbc.RadioItems(options=[{'label':'CT Model','value':'CTM'},{'label':'BSFG Model','value':'BSFG'},
-                    {'label':'All Models','value':'All'}],
+                    {'label':'All Models','value':'All'},{'label':'Reset','value':'Reset'}],
         id='radio_btn_fitting',inline=True),className='radio-btn-fitting-container'),
 
                 dcc.Loading(children=[
