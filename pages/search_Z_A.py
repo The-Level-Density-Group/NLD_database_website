@@ -118,6 +118,9 @@ def update_table(A, Z, value_method, value_reaction, value_status):
     filtered_df = df_NLD.copy()
     full_data_store = df_NLD.copy()
 
+    # return nothing if nothing is chosen by the user.
+    if A is None or Z is None and value_method is None and value_reaction is None and value_status is None:
+        return [],[]
     # Apply filters based on inputs if they are not None
     if A is not None and Z is not None:
         filtered_df = filtered_df[(filtered_df['A'] == A) & (filtered_df['Z'] == Z)]
@@ -140,7 +143,7 @@ def update_table(A, Z, value_method, value_reaction, value_status):
     filtered_df.dropna(subset=['Datafile'],inplace=True)
     full_data_store.dropna(subset=['Datafile'],inplace=True)
 
-    columns_to_hide = ['ID', 'Datafile', 'Author','Distance','Status']
+    columns_to_hide = ['ID','Exrange','Datafile', 'Author','Distance','Status']
     visible_df = filtered_df.drop(columns_to_hide, axis=1)
     
     return [visible_df.to_dict('records'),full_data_store.to_dict('records')]
