@@ -26,19 +26,44 @@ def liquid_drop_mass(A,Z):
 	return M_n*N + M_H*Z + E_vol + E_sur + E_coul + delta_m
 
 
-def bsfg_fitting(E, a, Delta,A):
+# def bsfg_fitting(E, a, Delta,A):
 
-	#delta = n*12/np.sqrt(A) + 0.173015
+# 	#delta = n*12/np.sqrt(A) + 0.173015
 
-	U = E - Delta
+# 	U = E - Delta
 
 	
-	a_tilde = 0.0722396*A + 0.195267 * A**(2/3) 
+# 	a_tilde = 0.0722396*A + 0.195267 * A**(2/3) 
 
-	sigma = np.sqrt(0.01389 * A**(5/3)/a_tilde * np.sqrt(U * a))
-	rho_F = 1/(np.sqrt(2*np.pi) * sigma) * np.sqrt(np.pi)/12 * np.exp(2 * np.sqrt(a * U))/(a**0.25 * U**1.25)
+# 	sigma = np.sqrt(0.01389 * A**(5/3)/a_tilde * np.sqrt(U * a))
+# 	rho_F = 1/(np.sqrt(2*np.pi) * sigma) * np.sqrt(np.pi)/12 * np.exp(2 * np.sqrt(a * U))/(a**0.25 * U**1.25)
 
-	return rho_F
+# 	return rho_F
+
+
+def bsfg_fitting(E, a, Delta, A):
+    U = E - Delta
+
+    a_tilde = 0.0722396 * A + 0.195267 * A**(2/3) 
+
+    # Initialize rho_F with zeros
+    rho_F = np.zeros_like(E)
+    #print(a)
+
+    # Create a boolean mask where U > 0
+    mask = U > 0
+
+    # Calculate sigma only where U > 0 to avoid invalid operations
+    sigma = np.sqrt(0.01389 * A**(5/3) / a_tilde * np.sqrt(U[mask] * a))
+
+    # Calculate rho_F only where U > 0
+    rho_F[mask] = (1 / (np.sqrt(2 * np.pi) * sigma) *
+                  (np.sqrt(np.pi) / 12) *
+                  np.exp(2 * np.sqrt(a * U[mask])) /
+                  (a**0.25 * U[mask]**1.25))
+
+    
+    return rho_F
 
 
 def ctm_fitting(x_data,T,E0):
