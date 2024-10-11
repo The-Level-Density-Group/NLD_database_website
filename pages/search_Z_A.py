@@ -94,6 +94,8 @@ def update_Z_dropdown(value):
 
     # Sort the mass numbers in ascending order using .sort_values(). The proton numbers are also arranged in ascending order (see utils/webpage_view.py)
     # There might be multiple datasets for same Z and A. We don't want that repititon to appear in the dropdown menu. Hence we use .unique()
+    df_NLD.dropna(subset=['Datafile'],inplace=True)
+
     return df_NLD['A'][df_NLD['Z'] == value].sort_values().unique()
 
 
@@ -118,13 +120,15 @@ def update_table(A, Z, value_method, value_reaction, value_status):
     filtered_df = df_NLD.copy()
     full_data_store = df_NLD.copy()
 
+    
     # return nothing if nothing is chosen by the user.
-    if A is None or Z is None and value_method is None and value_reaction is None and value_status is None:
-        return [],[]
+    # if A is None or Z is None and value_method is None and value_reaction is None and value_status is None:
+    #     return [],[]
     # Apply filters based on inputs if they are not None
     if A is not None and Z is not None:
         filtered_df = filtered_df[(filtered_df['A'] == A) & (filtered_df['Z'] == Z)]
         full_data_store = full_data_store[(full_data_store['A'] == A) & (full_data_store['Z'] ==Z)]
+        
     
     if value_method:
         filtered_df = filtered_df[filtered_df['Method'].isin(value_method)]
@@ -140,10 +144,13 @@ def update_table(A, Z, value_method, value_reaction, value_status):
         full_data_store = full_data_store[full_data_store['Status'].isin(value_status)]
 
     # Drop unnecessary columns and return the data
-    filtered_df.dropna(subset=['Datafile'],inplace=True)
-    full_data_store.dropna(subset=['Datafile'],inplace=True)
+    # filtered_df.dropna(subset=['Datafile'],inplace=True)
+    # filtered_df =  filtered_df.reset_index()
 
-    columns_to_hide = ['ID','Exrange','Datafile', 'Author','Distance','Status']
+    # full_data_store.dropna(subset=['Datafile'],inplace=True)
+    # full_data_store =  full_data_store.reset_index()
+
+    columns_to_hide = ['ID','Exrange','Datafile', 'Author','Distance','Status','Deformation']
     visible_df = filtered_df.drop(columns_to_hide, axis=1)
     
     return [visible_df.to_dict('records'),full_data_store.to_dict('records')]
