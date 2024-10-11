@@ -25,7 +25,7 @@ def view():
                     {"label": "Beta-n", "value":'Beta-n'},{"label": "Beta Oslo", "value":'Beta Oslo'},],
                     id="method_btn",inline=True,switch=True),className='method-btn'),
 
-                html.Div(dbc.Input(id='search_by_reaction',type='text',placeholder='Search by Reaction')),
+                html.Div(dbc.Input(id='search_by_reaction',type='text',placeholder='Search by Reaction. E.g.: d,p')),
 
                 html.Div(dbc.Checklist(options=[{"label": "Recommended", "value": 'Accepted'},{"label": "Not Recommended", "value":'Rejected'},
                     {'label':'Under Review','value':'Probation'}],id="status_btn",inline=True,switch=True),className='status-btn'),
