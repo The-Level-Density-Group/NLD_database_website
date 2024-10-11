@@ -1007,7 +1007,7 @@ def plot_selected_data(derived_virtual_selected_rows,value,value_fit,n_clicks,da
 
             split_plots.append(dcc.Graph(id=f'graph-{i}',figure=fig))
           
-    return [dcc.Graph(id='graph',figure=fig,style={"width":"100%","height":"100vh"})]
+    return [dcc.Graph(id='graph',figure=fig,style={"width":"100%","height":"60vh"})]
 
 
 
