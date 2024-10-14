@@ -646,7 +646,7 @@ def plot_selected_data(derived_virtual_selected_rows,value,value_fit,n_clicks,da
                 nld_data.rename(columns={0: "E (MeV)", 1: "NLD", 2: "NLD uncertainity"}, inplace=True)
 
                 fig.add_trace(go.Scatter(x=nld_data['E (MeV)'],y=nld_data['NLD'],error_y=dict(type='data',array=nld_data['NLD uncertainity']),mode='markers',
-                    name=data_df['Author'][i],showlegend=True))
+                    name=f"{data_df['Author'][i]} - {data_df['Isotope'][i]}",showlegend=True))
 
                 fig.update_xaxes(showline=True,linecolor='orange',color='orange',title_font_color='orange', linewidth=2,mirror=True,
                     showgrid=True,gridcolor='LightGray',showticklabels=True, title_text='E (MeV)')
@@ -846,7 +846,7 @@ def plot_selected_data(derived_virtual_selected_rows,value,value_fit,n_clicks,da
             nld_data.rename(columns={0: "E (MeV)", 1: "NLD", 2: "NLD uncertainity"}, inplace=True)
 
             fig.add_trace(go.Scatter(x=nld_data['E (MeV)'],y=nld_data['NLD'],error_y=dict(type='data',array=nld_data['NLD uncertainity']),mode='markers',
-                    name=data_df['Author'][i]))
+                    name=f"{data_df['Author'][i]} - {data_df['Isotope'][i]}"))
 
             fig.update_xaxes(showline=True,linecolor='orange',color='orange',title_font_color='orange', linewidth=2,mirror=True,
                     showgrid=True,gridcolor='LightGray',showticklabels=True,title_text='E (MeV)')
