@@ -26,6 +26,7 @@ layout = html.Div([
 
     # created a div to count the number of datasets and referenced the ID in counter.js file for some cool animation.
     html.Div(id='dataset_counter',className='counter'),
+    #html.Span('0', id='dataset_counter', **{'data-target': '0'},className='counter'),
 
     # A clickable button that takes you to the database.
     html.A(html.Button('Go to Database', id='go_to_database_btn',className='database-btn'),href='/search-z-a'),
@@ -36,6 +37,8 @@ layout = html.Div([
 
 
     # To store the entire main log file (without displaying it on the webpage.)
+    
+
     dcc.Store(id='full-data-store',data=df_NLD.to_dict('records'))
 ])
 
@@ -44,10 +47,16 @@ layout = html.Div([
 
 def counter(data):
 
-	'''Function to count the number of available datasets.
-	Input: data - stores the entire main data log file.
-	Output: Length of the main log file.'''
+  '''Function to count the number of available datasets.
+  Input: data - stores the entire main data log file.
+  Output: Length of the main log file.'''
 
-	df = pd.DataFrame(data)
+  df = pd.DataFrame(data)
 
-	return str(len(df))
+  target_number = len(df)
+
+  return str(target_number)
+
+
+
+
