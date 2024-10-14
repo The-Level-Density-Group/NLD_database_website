@@ -1,51 +1,68 @@
 // assets/counter.js
 
-function counter_animation() {
-    const counter = document.getElementById('dataset_counter');
-    console.log('Counter element:', counter);  // Log the counter element to ensure it's found
+document.addEventListener('DOMContentLoaded', function () {
+    console.log('Counter.js loaded');
 
-        // Check if the counter element exists
-    if (counter) {
-            // Extract the target number from the counter text content
-        const targetNumber = parseInt(counter.textContent, 10);
-        console.log('Target number:', targetNumber);  // Log the target number
-        let currentNumber = 0;  // Initialize the current number to 0
+    function counter_animation() {
+        const counter = document.getElementById('dataset_counter');
+        console.log('Counter element:', counter);
 
-            // Set up an interval to update the counter every 50 milliseconds
-        const interval = setInterval(() => {
-            currentNumber += 1;  // Increment the current number
-            counter.textContent = currentNumber;  // Update the counter text content
-            console.log('Current number:', currentNumber);  // Log the current number
+        if (counter) {
+            let targetNumber = parseInt(counter.getAttribute('data-target'), 10);
+            console.log('Initial target number:', targetNumber);
 
-                // If the current number reaches the target number, stop the interval
-            if (currentNumber >= targetNumber) {
-                clearInterval(interval);
-                console.log('Reached target number. Interval cleared.');  // Log when the interval is cleared
+            if (isNaN(targetNumber)) {
+                console.error('Invalid target number:', counter.getAttribute('data-target'));
+                return;
+            }
+
+            let currentNumber = 0;
+            counter.textContent = currentNumber;
+
+            const increment = Math.ceil(targetNumber / 100);
+            const intervalTime = 20;
+
+            const updateCounter = () => {
+                currentNumber += increment;
+
+                if (currentNumber >= targetNumber) {
+                    counter.textContent = targetNumber;
+                    clearInterval(interval);
+                    console.log('Reached target number. Interval cleared.');
+                } else {
+                    counter.textContent = currentNumber;
+                    console.log('Current number:', currentNumber);
                 }
-            }, 3);  // Adjust the speed of the counter as needed
+            };
+
+            let interval = setInterval(updateCounter, intervalTime);
+
+            // Observe changes to the data-target attribute
+            const observer = new MutationObserver((mutations) => {
+                mutations.forEach((mutation) => {
+                    if (mutation.type === 'attributes' && mutation.attributeName === 'data-target') {
+                        // Reset and start animation again
+                        targetNumber = parseInt(counter.getAttribute('data-target'), 10);
+                        console.log('Updated target number:', targetNumber);
+                        if (isNaN(targetNumber)) {
+                            console.error('Invalid target number:', counter.getAttribute('data-target'));
+                            return;
+                        }
+                        currentNumber = 0;
+                        counter.textContent = currentNumber;
+                        clearInterval(interval);
+                        interval = setInterval(updateCounter, intervalTime);
+                    }
+                });
+            });
+
+            observer.observe(counter, {
+                attributes: true
+            });
+        } else {
+            console.error('Counter element not found.');
         }
     }
- 
 
-document.addEventListener('DOMContentLoaded', function () {
-    console.log('Counter.js loaded');  // This log confirms the JS file is loaded
-
-    function startCounter() {
-
-        if (document.readyState == "complete") {
-            // const counter = document.getElementById('dataset_counter');
-            // console.log('Counter element:', counter);  // Log the counter element to ensure it's found
-            counter_animation();
-    }
-
-        else {setTimeout(counter_animation, 100)};  // 100 milliseconds delay to ensure the DOM is fully loaded
-
-
-
-    } startCounter();
+    counter_animation();
 });
-
-
-
-
-
