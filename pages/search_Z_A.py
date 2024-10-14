@@ -37,7 +37,7 @@ dash.register_page(__name__,title='Search by Z and A',name='Search by Z and A')
 
 # load the main log file.
 df_NLD = pd.read_excel('log_book_new.xlsx')
-
+df_NLD.dropna(subset=['Datafile'],inplace=True)
 
 # By default Plotly displays a blank plotting area on the webpage. This function is made to avoid displaying that once the webpage is loaded.
 
@@ -94,7 +94,6 @@ def update_Z_dropdown(value):
 
     # Sort the mass numbers in ascending order using .sort_values(). The proton numbers are also arranged in ascending order (see utils/webpage_view.py)
     # There might be multiple datasets for same Z and A. We don't want that repititon to appear in the dropdown menu. Hence we use .unique()
-    df_NLD.dropna(subset=['Datafile'],inplace=True)
 
     return df_NLD['A'][df_NLD['Z'] == value].sort_values().unique()
 
