@@ -135,8 +135,8 @@ def update_table(A, Z, value_method, value_reaction, value_status):
 
     if value_reaction:
         value_reaction = re.sub(r'\s+|\(|\)', '', value_reaction).lower()
-        filtered_df = filtered_df[filtered_df['Reaction'].str.replace(r'\s+|\(|\)', '', regex=True).str.lower().isin([value_reaction])]
-        full_data_store = full_data_store[full_data_store['Reaction'].str.replace(r'\s+|\(|\)', '', regex=True).str.lower().isin([value_reaction])]
+        filtered_df = filtered_df[filtered_df['Reaction'].str.replace(r'\s+|\(|\)', '', regex=True).str.lower().str.contains(value_reaction,na=False)]
+        full_data_store = full_data_store[full_data_store['Reaction'].str.replace(r'\s+|\(|\)', '', regex=True).str.lower().str.contains(value_reaction,na=False)]
 
     if value_status:
         filtered_df = filtered_df[filtered_df['Status'].isin(value_status)]
