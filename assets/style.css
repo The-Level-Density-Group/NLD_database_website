@@ -274,10 +274,10 @@ body {
 #search_by_reaction {
     margin-top: 1rem;
     color: orange !important; /* Text color */
-    background-color: rgb(63, 61, 61) !important; /* Background color */
-    border: 1px solid #555 !important; /* Border color */
+    /* background-color: rgb(63, 61, 61) !important; Background color */
+    border: 1px solid orange !important; /* Border color */
     border-radius: 5px !important; /* Rounded corners */
-    padding: 10px !important; /* Padding */
+    padding: 1px !important; /* Padding */
     transition: background-color 0.3s, color 0.3s, border-color 0.3s;
 }
 
@@ -285,6 +285,7 @@ body {
     color: orange !important; /* Placeholder text color */
     opacity: 1; /* Make sure the placeholder is fully opaque */
 }
+
 
 #search_by_reaction:focus {
     border-color: orange !important; /* Border color when focused */
