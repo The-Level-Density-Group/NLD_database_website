@@ -1030,7 +1030,7 @@ def create_zip(n_clicks_download,selected_rows, data, div_graphs_children,n_clic
         data_df = pd.DataFrame.from_dict(data)
         selected_df = data_df.iloc[selected_rows]
         selected_data_sets = selected_df['Datafile']
-
+        
         for ind,i in enumerate(selected_rows):
             csv_data_set = pd.read_csv(selected_data_sets[i],comment='#',header=None)
             csv_data_set.rename(columns={0: "E (MeV)", 1: "NLD", 2: "NLD uncertainity"}, inplace=True)
