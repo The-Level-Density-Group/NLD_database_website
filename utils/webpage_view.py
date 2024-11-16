@@ -6,11 +6,11 @@ import dash_bootstrap_components as dbc
 
 df_NLD = pd.read_excel('log_book_new.xlsx')
 
-unique_reactions = set()
-for reactions in df_NLD['Reaction']:
-    if isinstance(reactions,str):
-        for reaction in reactions.split(';'):
-            unique_reactions.add(reaction.strip())
+#unique_reactions = set()
+#for reactions in df_NLD['Reaction']:
+#    if isinstance(reactions,str):
+#        for reaction in reactions.split(';'):
+#            unique_reactions.add(reaction.strip())
 
 def view():
     return \
@@ -31,10 +31,10 @@ def view():
                     {"label": "Beta-n", "value":'Beta-n'},{"label": "Beta Oslo", "value":'Beta Oslo'},],
                     id="method_btn",inline=True,switch=True),className='method-btn'),
 
-                dcc.Dropdown(id='search_by_reaction',options=[{'label': reaction, 'value': reaction} for reaction in unique_reactions],
-                    placeholder="Select or type a reaction",searchable=True,clearable=True,),
+#                dcc.Dropdown(id='search_by_reaction',options=[{'label': reaction, 'value': reaction} for reaction in unique_reactions],
+#                    placeholder="Select or type a reaction",searchable=True,clearable=True,),
 
-                #html.Div(dbc.Input(id='search_by_reaction',type='text',placeholder='Search by Reaction. E.g.: d,p')),
+                html.Div(dbc.Input(id='search_by_reaction',type='text',placeholder='Search by Reaction. E.g.: d,p or 7Li,p')),
 
                 html.Div(dbc.Checklist(options=[{"label": "Recommended", "value": 'Accepted'},{"label": "Not Recommended", "value":'Rejected'},
                     {'label':'Under Review','value':'Probation'}],id="status_btn",inline=True,switch=True),className='status-btn'),
