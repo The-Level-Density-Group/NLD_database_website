@@ -1,5 +1,4 @@
-import numpy as np 
-import math
+import numpy as np
 
 def liquid_drop_mass(A,Z):
 	N = A - Z
