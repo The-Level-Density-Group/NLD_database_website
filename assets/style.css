@@ -173,10 +173,14 @@ body {
 	color: black;
 }
 
-.search_by_status_btn {
+.status-btn{
+    visibility: hidden;
+}
+
+/*.search_by_status_btn {
 	font-size: 20px;
 	color: black;
-}
+}*/
 
 .container.scalable {
     width: 95%;
