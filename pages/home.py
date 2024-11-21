@@ -29,11 +29,11 @@ layout = html.Div([
     #html.Span('0', id='dataset_counter', **{'data-target': '0'},className='counter'),
 
     # A clickable button that takes you to the database.
-    html.A(html.Button('Go to Database', id='go_to_database_btn',className='database-btn'),href='/search-z-a'),
+    html.Div(html.A(html.Button('Go to Database', id='go_to_database_btn',className='database-btn'),href='/search-z-a'),className='database-btn-container'),
 
     html.P(['If you would like to submit your dataset to this database or if you would like to inquire about an available dataset, please forward \
     	your queries to ',html.A('The Level Density Group', href='mailto:theleveldensitygroup@gmail.com',style={'color':'orange'})],
-        style={'textAlign':'center','font-size':'16px','margin-top':'12rem','font-weight':'bold'}),
+        className='contact-info-section'),
 
 
     # To store the entire main log file (without displaying it on the webpage.)
