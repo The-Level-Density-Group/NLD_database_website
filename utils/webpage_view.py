@@ -6,11 +6,11 @@ import dash_bootstrap_components as dbc
 
 df_NLD = pd.read_excel('log_book_new.xlsx')
 
-#unique_reactions = set()
-#for reactions in df_NLD['Reaction']:
-#    if isinstance(reactions,str):
-#        for reaction in reactions.split(';'):
-#            unique_reactions.add(reaction.strip())
+unique_reactions = set()
+for reactions in df_NLD['Reaction']:
+   if isinstance(reactions,str):
+       for reaction in reactions.split(';'):
+           unique_reactions.add(reaction.strip())
 
 def view():
     return \
@@ -27,14 +27,15 @@ def view():
 
                 html.P('Filter by method:',id='method_filter_header'),
                 html.Div(dbc.Checklist(options=[{"label": "Evaporation", "value": 'Evaporation'},{"label": "Oslo", "value":'Oslo'},
-                    {"label": "Ericson", "value":'Ericson'},{"label": "Inverse Oslo", "value":'Inverse Oslo'},{"label": "Beta-p", "value":'Beta-p'},
-                    {"label": "Beta-n", "value":'Beta-n'},{"label": "Beta Oslo", "value":'Beta Oslo'},],
+                    {"label": "Ericson", "value":'Ericson'},{"label": "Inverse Oslo", "value":'Inverse Oslo'},{"label": "Beta Oslo", "value":'Beta Oslo'}
+                    #{"label": "Beta-n", "value":'Beta-n'},{"label": "Beta-p", "value":'Beta-p'}
+                    ],
                     id="method_btn",inline=True,switch=True),className='method-btn'),
 
-#                dcc.Dropdown(id='search_by_reaction',options=[{'label': reaction, 'value': reaction} for reaction in unique_reactions],
-#                    placeholder="Select or type a reaction",searchable=True,clearable=True,),
+               dcc.Dropdown(id='search_by_reaction',options=[{'label': reaction, 'value': reaction} for reaction in unique_reactions],
+                   placeholder="Select or type a reaction",searchable=True,clearable=True,),
 
-                html.Div(dbc.Input(id='search_by_reaction',type='text',placeholder='Search by Reaction. E.g.: d,p or 7Li,p')),
+                #html.Div(dbc.Input(id='search_by_reaction',type='text',placeholder='Search by Reaction. E.g.: d,p or 7Li,p')),
 
                 html.Div(dbc.Checklist(options=[{"label": "Recommended", "value": 'Accepted'},{"label": "Not Recommended", "value":'Rejected'},
                     {'label':'Under Review','value':'Probation'}],id="status_btn",inline=True,switch=True),className='status-btn'),
@@ -49,7 +50,7 @@ def view():
             ]),
 
             html.Div(id='center-column', children=[html.Div([dash_table.DataTable(data=[],id='data_log_table', 
-                #columns=[{'id': c, 'name': c} for c in df_NLD.columns],
+                #columns=[{'id': c, 'name': c,'presentation':'markdown'} for c in df_NLD.columns],
                 tooltip_header={
                 'Emin': 'Minimum energy value used for the fitting',
                 'Emax': 'Maximum energy value used for the fitting',
