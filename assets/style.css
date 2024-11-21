@@ -98,11 +98,14 @@ body {
     position: relative;
 
 }*/
-
+.database-btn-container{
+    height: 20vh; /* Positions the button 50% down the viewport */
+    position: relative;
+}
 .database-btn {
-    position: fixed;
-    top: 80vh; /* Positions the button 50% down the viewport */
-    left: 40vw; /* Positions the button 40% from the left of the viewport */
+    position: absolute;
+    top: 50%; /* Positions the button 50% down the viewport */
+    left: 50%; /* Positions the button 40% from the left of the viewport */
     transform: translate(-50%, -50%); /* Adjusts for button width and height */
     width: 20%; 
     height: 7vh;
@@ -113,15 +116,22 @@ body {
 }
 
 
-#go_to_database_btn {
+/*#go_to_database_btn {
     position: absolute;
     left: 50%;
     bottom: 10%;
     transform: translateX(-50%);
-}
+}*/
 
 .database-btn:hover {
     background-color: #2F4F4F;
+}
+
+.contact-info-section {
+    text-align: center;
+    font-size:16px;
+    margin-top:2rem;
+    font-weight:bold;
 }
 /* ----------------------- Navigation bar ------------------------ */
 
