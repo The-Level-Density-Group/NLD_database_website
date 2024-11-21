@@ -13,7 +13,6 @@ from scipy.optimize import curve_fit
 from utils.webpage_view import *
 from utils.fitting_functions import *
 import re
-import scipy.stats as stats
 
 
 ''' -------------------------------------------- Table of Contents --------------------------------------------------
