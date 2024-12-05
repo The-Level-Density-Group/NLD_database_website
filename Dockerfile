@@ -5,7 +5,7 @@ SHELL ["/bin/bash", "-c"]
 
 RUN mkdir wd
 WORKDIR wd
-
+RUN apt-get install -y libexpat1
 COPY . .
 
 ARG TARGETPLATFORM
