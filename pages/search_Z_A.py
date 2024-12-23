@@ -19,13 +19,9 @@ import re
 
 1) Preliminary -- Things required for the website to function properly (as intended)
 
-2) Callbacks for Inputs -- Callbacks and functions defined for various kinds of inputs.
+2) Condtional display of radio buttons -- display radio buttons after the user selects a particular data set(s).
 
-3) Display Data Tables -- based on the inputs the user gives.
-
-4) Condtional display of radio buttons -- display radio buttons after the user selects a particular data set(s).
-
-5) Main Functions -- Functions (and callbacks) for displaying graphs & model fitting, and for selected data sets (along with figures). '''
+3) Main Functions -- Functions (and callbacks) for displaying graphs & model fitting, and for selected data sets (along with figures). '''
 
 
 
@@ -154,361 +150,7 @@ def update_table(A, Z, value_method, value_reaction, value_status):
     return [visible_df.to_dict('records'),full_data_store.to_dict('records')]
 
 
-# @callback(
-#     [Output(component_id='data_log_table', component_property='data',allow_duplicate=True),Output('full-data-store','data',allow_duplicate=True)],
-#     [Input(component_id='mass-number', component_property='value'),
-#     Input(component_id='proton-number', component_property='value'),
-#     Input('method_btn','value'),Input('search_by_reaction','value'),Input('status_btn','value')],prevent_initial_call=True
-# )
-
-# def update_table(A, Z,value_method,value_reaction,value_status):
-#     '''Function to display the available datasets for a particular Z and A.
-#     Inputs: A, Z - mass number, proton number.
-#     Outputs: A slice of the data frame (data table) that has datasets available with that Z and A.'''
-
-#     # dataframe (df) filtered by the user selected Z and A.
-
-#     # if (value_method is None or len(value_method)==0) and (A is None or Z is None) and (value_reaction is None) or (value_status is None or len(value_status) == 0):
-#     #     return [], []
-
-    
-#     filtered_df = df_NLD[(df_NLD['Z'] == Z) & (df_NLD['A'] == A)]
-#     filtered_df.dropna(subset=['Datafile'],inplace=True)
-#     filtered_df =  filtered_df.reset_index()
-
-#     #filtered_df['Datafile'] = filtered_df['Datafile'].replace(np.nan,'File not available.')
-
-#     # the original dataset has a lot of columns. We don't want to show all of them.
-#     # Theses 3 columns -- ID (not useful info), Datafile (not useful info) & Author (mentioned in References) 
-#     # -- were the ones that I didn't want to show on my webpage.
-#     columns_to_hide = ['ID','Datafile','Author']
-
-#     # hide those unnecessary columns.
-#     visible_df = filtered_df.drop(columns_to_hide,axis=1)
-
-    
-#     # These dropped columns may not be useful for showing. But they will be useful for identifying which dataset was clicked (using ID)
-#     # which datafile to retrieve (Datafile) and what to show in the legend of every plot (Author). 
-#     # So, we will store the original, untampered data table as a seperate dataframe in the back such that it doesn't appear on the webpage.
-
-#     full_data_store_filtered = df_NLD[(df_NLD['Z'] == Z) & (df_NLD['A'] == A)]
-#     full_data_store_filtered.dropna(subset=['Datafile'],inplace=True)
-#     full_data_store_filtered = full_data_store_filtered.reset_index()
-
-#     print(value_method,value_status)
-
-#     # if value_method is None or len(value_method)==0:
-#     #     return [visible_df.to_dict('records'),full_data_store_filtered.to_dict('records')]
-
-#     if (A and Z) and value_method:
-#         filtered_df = df_NLD[(df_NLD['Z'] == Z) & (df_NLD['A'] == A)]
-#         filtered_df.dropna(subset=['Datafile'],inplace=True)
-#         filtered_df =  filtered_df.reset_index()
-#         columns_to_hide = ['ID','Datafile','Author']
-
-#         visible_df = filtered_df.drop(columns_to_hide,axis=1)
-#         visible_df = visible_df[visible_df['Method'].isin(value_method)]
-#         visible_df = visible_df.reset_index()
-
-#         full_data_store_filtered = full_data_store_filtered[full_data_store_filtered['Method'].isin(value_method)]
-#         full_data_store_filtered = full_data_store_filtered.reset_index()
-
-#     if value_method and value_reaction:
-#         value_reaction = re.sub(r'\s+|\(|\)', '', value_reaction).lower()
-#         filtered_df = df_NLD[df_NLD['Method'].isin(value_method)]
-#         filtered_df = filtered_df[filtered_df['Reaction'].str.replace(r'\s+|\(|\)', '', regex=True).str.lower().isin([value_reaction])]
-#         filtered_df.dropna(subset=['Datafile'],inplace=True)
-#         filtered_df =  filtered_df.reset_index()
-#         visible_df = filtered_df.drop(columns_to_hide,axis=1)
-
-#         full_data_store_filtered = df_NLD[df_NLD['Method'].isin(value_method)]
-#         full_data_store_filtered = full_data_store_filtered[full_data_store_filtered['Reaction'].str.replace(r'\s+|\(|\)', '', regex=True).str.lower().isin([value_reaction])]
-#         full_data_store_filtered = full_data_store_filtered.reset_index()
-
-#     if value_status is not None and value_method is not None:
-#         filtered_df = df_NLD[(df_NLD['Method'].isin(value_method)) & (df_NLD['Status'].isin(value_status))]
-#         #filtered_df = filtered_df[filtered_df['Status'].isin(value_status)]
-#         filtered_df.dropna(subset=['Datafile'],inplace=True)
-#         print(filtered_df.head())
-#         filtered_df =  filtered_df.reset_index()
-#         visible_df = filtered_df.drop(columns_to_hide,axis=1)
-#         #visible_df = visible_df.reset_index()
-
-#         full_data_store_filtered = df_NLD[df_NLD['Method'].isin(value_method)]
-#         full_data_store_filtered = full_data_store_filtered[full_data_store_filtered['Status'].isin(value_status)]
-#         full_data_store_filtered =  full_data_store_filtered.reset_index()
-
-#     if (A or Z) and value_reaction:
-#         value_reaction = re.sub(r'\s+|\(|\)', '', value_reaction).lower()
-
-#         visible_df = visible_df[visible_df['Reaction'].str.replace(r'\s+|\(|\)', '', regex=True).str.lower().isin([value_reaction])]
-#         visible_df = visible_df.reset_index()
-
-#         full_data_store_filtered = full_data_store_filtered[full_data_store_filtered['Reaction'].str.replace(r'\s+|\(|\)', '', regex=True).str.lower().isin([value_reaction])]
-#         full_data_store_filtered = full_data_store_filtered.reset_index()
-
-#     if (A or Z) and value_status:
-
-#         visible_df = visible_df[visible_df['Status'].isin(value_status)]
-#         visible_df = visible_df.reset_index()
-
-#         full_data_store_filtered = full_data_store_filtered[full_data_store_filtered['Status'].isin(value_status)]
-#         full_data_store_filtered = full_data_store_filtered.reset_index()
-
-#     # if value_status and value_reaction:
-
-#     #     value_reaction = re.sub(r'\s+|\(|\)', '', value_reaction).lower()
-
-#     #     filtered_df = df_NLD[df_NLD['Status'].isin(value_status)]
-#     #     filtered_df = filtered_df[filtered_df['Reaction'].str.replace(r'\s+|\(|\)', '', regex=True).str.lower().isin([value_reaction])]
-#     #     filtered_df =  filtered_df.reset_index()
-#     #     visible_df = filtered_df.drop(columns_to_hide,axis=1)
-
-#     #     full_data_store_filtered = df_NLD[df_NLD['Status'].isin(value_status)]
-#     #     full_data_store_filtered = full_data_store_filtered[full_data_store_filtered['Reaction'].str.replace(r'\s+|\(|\)', '', regex=True).str.lower().isin([value_reaction])]
-#     #     full_data_store_filtered =  full_data_store_filtered.reset_index()
-
-
-
-
-
-#     # if value_method and value_reaction and (A or Z):
-
-#     #     value_reaction = re.sub(r'\s+|\(|\)', '', value_reaction).lower()
-#     #     visible_df = visible_df[visible_df['Method'].isin(value_method)]
-#     #     visible_df = visible_df[visible_df['Reaction'].str.replace(r'\s+|\(|\)', '', regex=True).str.lower().isin([value_reaction])]
-#     #     visible_df = visible_df.reset_index()
-
-#     #     full_data_store_filtered = full_data_store_filtered[full_data_store_filtered['Method'].isin(value_method)]
-#     #     full_data_store_filtered = full_data_store_filtered[full_data_store_filtered['Reaction'].str.replace(r'\s+|\(|\)', '', regex=True).str.lower().isin([value_reaction])]
-#     #     full_data_store_filtered = full_data_store_filtered.reset_index()
-
-#     # if (A or Z) and value_reaction and value_status:
-
-#     #     value_reaction = re.sub(r'\s+|\(|\)', '', value_reaction).lower()
-#     #     visible_df = visible_df[visible_df['Status'].isin(value_status)]
-#     #     visible_df = visible_df[visible_df['Reaction'].str.replace(r'\s+|\(|\)', '', regex=True).str.lower().isin([value_reaction])]
-#     #     visible_df = visible_df.reset_index()
-
-#     #     full_data_store_filtered = full_data_store_filtered[full_data_store_filtered['Status'].isin(value_status)]
-#     #     full_data_store_filtered = full_data_store_filtered[full_data_store_filtered['Reaction'].str.replace(r'\s+|\(|\)', '', regex=True).str.lower().isin([value_reaction])]
-#     #     full_data_store_filtered = full_data_store_filtered.reset_index()
-
-#     # if (A or Z) and value_method and value_status:
-
-#     #     visible_df = visible_df[visible_df['Method'].isin(value_method)]
-#     #     visible_df = visible_df[visible_df['Status'].isin(value_status)]
-#     #     visible_df = visible_df.reset_index()
-
-#     #     full_data_store_filtered = full_data_store_filtered[full_data_store_filtered['Method'].isin(value_method)]
-#     #     full_data_store_filtered = full_data_store_filtered[full_data_store_filtered['Status'].isin(value_status)]
-#     #     full_data_store_filtered.reset_index()
-
-#     # if value_status and value_method and value_reaction:
-
-#     #     value_reaction = re.sub(r'\s+|\(|\)', '', value_reaction).lower()
-
-#     #     filtered_df = df_NLD[df_NLD['Status'].isin(value_status)]
-#     #     filtered_df = filtered_df[filtered_df['Method'].isin(value_method)]
-#     #     filtered_df = filtered_df[filtered_df['Reaction'].str.replace(r'\s+|\(|\)', '', regex=True).str.lower().isin([value_reaction])]
-        
-#     #     filtered_df =  filtered_df.reset_index()
-#     #     visible_df = filtered_df.drop(columns_to_hide,axis=1)
-#     #     visible_df = visible_df.reset_index()
-
-#     #     full_data_store_filtered = df_NLD[df_NLD['Method'].isin(value_method)]
-#     #     full_data_store_filtered = full_data_store_filtered[full_data_store_filtered['Status'].isin(value_status)]
-#     #     full_data_store_filtered = full_data_store_filtered[full_data_store_filtered['Reaction'].str.replace(r'\s+|\(|\)', '', regex=True).str.lower().isin([value_reaction])]
-#     #     full_data_store_filtered =  full_data_store_filtered.reset_index()
-
-
-#     if value_method and (A is None and Z is None):
-#         filtered_df = df_NLD[df_NLD['Method'].isin(value_method)]
-#         filtered_df.dropna(subset=['Datafile'],inplace=True)
-#         filtered_df =  filtered_df.reset_index()
-#         visible_df = filtered_df.drop(columns_to_hide,axis=1)
-#     # look at previous function's documentation to see why this was done.
-#         columns_to_hide = ['ID','Datafile','Author']
-
-#         visible_df = filtered_df.drop(columns_to_hide,axis=1)
-
-#         full_data_store_filtered = df_NLD[df_NLD['Method'].isin(value_method)]
-#         full_data_store_filtered.dropna(subset=['Datafile'],inplace=True)
-#         full_data_store_filtered = full_data_store_filtered.reset_index()
-
-    
-    
-#     if value_reaction and (A is None and Z is None):
-
-#         value_reaction = re.sub(r'\s+|\(|\)', '', value_reaction).lower()
-
-#         filtered_df = df_NLD[df_NLD['Reaction'].str.replace(r'\s+|\(|\)', '', regex=True).str.lower().isin([value_reaction])]
-#         filtered_df.dropna(subset=['Datafile'],inplace=True)
-#         filtered_df =  filtered_df.reset_index()
-#         columns_to_hide = ['ID','Datafile','Author']
-
-#         visible_df = filtered_df.drop(columns_to_hide,axis=1)
-#         visible_df = visible_df.reset_index()
-
-#         full_data_store_filtered = df_NLD[df_NLD['Reaction'].str.replace(r'\s+|\(|\)', '', regex=True).str.lower().isin([value_reaction])]
-#         full_data_store_filtered.dropna(subset=['Datafile'],inplace=True)
-#         full_data_store_filtered = full_data_store_filtered.reset_index()
-
-#     if value_status and (A is None and Z is None):
-#         filtered_df = df_NLD[df_NLD['Status'].isin(value_status)]
-#         filtered_df.dropna(subset=['Datafile'],inplace=True)
-#         filtered_df =  filtered_df.reset_index()
-#         visible_df = filtered_df.drop(columns_to_hide,axis=1)
-#     # look at previous function's documentation to see why this was done.
-#         columns_to_hide = ['ID','Datafile','Author']
-
-#         visible_df = filtered_df.drop(columns_to_hide,axis=1)
-#         #visible_df = visible_df.reset_index()
-
-#         full_data_store_filtered = df_NLD[df_NLD['Status'].isin(value_status)]
-#         full_data_store_filtered.dropna(subset=['Datafile'],inplace=True)
-#         full_data_store_filtered = full_data_store_filtered.reset_index()
-
-#     # if value_method and value_reaction and value_status and (A or Z):
-
-#     #     value_reaction = re.sub(r'\s+|\(|\)', '', value_reaction).lower()
-
-#     #     visible_df = visible_df[visible_df['Status'].isin(value_status)]
-#     #     visible_df = visible_df[visible_df['Reaction'].str.replace(r'\s+|\(|\)', '', regex=True).str.lower().isin([value_reaction])]
-#     #     visible_df = visible_df[visible_df['Method'].isin(value_method)]
-#     #     visible_df = visible_df.reset_index()
-
-#     #     full_data_store_filtered = full_data_store_filtered[full_data_store_filtered['Status'].isin(value_status)]
-#     #     full_data_store_filtered = full_data_store_filtered[full_data_store_filtered['Reaction'].str.replace(r'\s+|\(|\)', '', regex=True).str.lower().isin([value_reaction])]
-#     #     full_data_store_filtered = full_data_store_filtered[full_data_store_filtered['Method'].isin(value_method)]
-#     #     full_data_store_filtered = full_data_store_filtered.reset_index()
-
-
-
-    
-
-
-#     return [visible_df.to_dict('records'),full_data_store_filtered.to_dict('records')]
-
-
-
-
-# ------------------------------------------------- 3.1) Display data table based on method --------------------------------------------------
-
-# Callback that takes in a particular method and shows the available data sets with that chosen method (e.g. Evaporation, Oslo, Ericson fluctuations etc.).
-# The allow_duplicate = True option, allows for the same output to be used in multiple callbacks.
-# By default all callbacks are triggered one after the another. Setting prevent_initial_call = True 
-# prevents certain callbacks to be triggered from the beginning.
-
-# @callback([Output('data_log_table','data',allow_duplicate=True),Output('full-data-store','data',allow_duplicate=True)],
-#     [Input('method_btn','value')],[State('data_log_table','data')],prevent_initial_call=True)
-
-# def update_table_method(value,data_log_table):
-
-#     '''Function that displays the available datasets for a chosen method.
-#     Inputs: value -- the chosen method(s). More than one method can be chosen.
-#     Output: data table containing information about datasets with that chosen method(s).'''
-
-#     # if no method (or methods) is chosen, return empty tables.
-
-#     if value is None or len(value) == 0:
-#         return data_log_table, data_log_table
-
-#     # df filtered by the chosen methods.
-#     filtered_df = df_NLD[df_NLD['Method'].isin(value)]
-#     filtered_df.dropna(subset=['Datafile'],inplace=True)
-#     filtered_df =  filtered_df.reset_index()
-
-#     # look at previous function's documentation to see why this was done.
-#     columns_to_hide = ['ID','Datafile','Author']
-
-#     visible_df = filtered_df.drop(columns_to_hide,axis=1)
-
-#     full_data_store_filtered = df_NLD[df_NLD['Method'].isin(value)]
-#     full_data_store_filtered.dropna(subset=['Datafile'],inplace=True)
-#     full_data_store_filtered = full_data_store_filtered.reset_index()
-    
-
-#     return [visible_df.to_dict('records'), full_data_store_filtered.to_dict('records')]
-
-
-# ------------------------------------------------- 3.2) Display data table based on reaction --------------------------------------------------
-
-# Callback that takes in a particular reaction and shows the available data sets with that chosen reaction.
-# The allow_duplicate = True option, allows for the same output to be used in multiple callbacks.
-# By default all callbacks are triggered one after the another. Setting prevent_initial_call = True 
-# prevents certain callbacks to be triggered from the beginning.
-
-# @callback([Output('data_log_table','data',allow_duplicate=True),Output('full-data-store','data',allow_duplicate=True)],
-#     [Input('search_by_reaction','value')],prevent_initial_call=True)
-
-# def update_table_reaction(value):
-
-#     '''Function that displays the available datasets for a chosen reaction.
-#     Inputs: value -- the chosen reaction. Only one reaction can be chosen.
-#     Output: data table containing information about datasets with that reaction.'''
-
-#     # If no reaction is chosen, return empty tables.
-#     if value is None:
-#         return [], []
-
-#     value = re.sub(r'\s+|\(|\)', '', value).lower()
-
-#     # Filter the dataframe by chosen reaction, after removing spaces, parentheses, and converting to lowercase
-#     filtered_df = df_NLD[df_NLD['Reaction'].str.replace(r'\s+|\(|\)', '', regex=True).str.lower().isin([value])]
-#     filtered_df.dropna(subset=['Datafile'],inplace=True)
-#     filtered_df =  filtered_df.reset_index()
-
-
-#     columns_to_hide = ['ID','Datafile','Author']
-
-#     visible_df = filtered_df.drop(columns_to_hide,axis=1)
-
-#     full_data_store_filtered = df_NLD[df_NLD['Reaction'].str.replace(r'\s+|\(|\)', '', regex=True).str.lower().isin([value])]
-#     full_data_store_filtered.dropna(subset=['Datafile'],inplace=True)
-#     full_data_store_filtered = full_data_store_filtered.reset_index()
-    
-
-#     return [visible_df.to_dict('records'), full_data_store_filtered.to_dict('records')]
-
-
-# ------------------------------------------------- 3.3) Display data table based on status --------------------------------------------------
-
-# Callback that displays the available data sets with a particular status (Accepted, Rejected or Probation).
-# By default all callbacks are triggered one after the another. Setting prevent_initial_call = True 
-# prevents certain callbacks to be triggered from the beginning.
-
-# @callback([Output('data_log_table','data'),Output('full-data-store','data')],
-#     [Input('status_btn','value')],prevent_initial_call=True)
-
-# def update_table_status(value):
-
-#     '''Function that displays the available datasets for a chosen status.
-#     Inputs: value -- the chosen status. More than one status can be chosen.
-#     Output: data table containing information about datasets with that status.'''
-
-#     # If no status is chosen, return empty tables.
-#     if value is None:
-#         return [],[]
-
-#     # filter the data table by the status (Accepted, Rejected or Probation).
-#     filtered_df = df_NLD[df_NLD['Status'].isin(value)]
-#     filtered_df.dropna(subset=['Datafile'],inplace=True)
-#     filtered_df =  filtered_df.reset_index()
-
-#     columns_to_hide = ['ID','Datafile','Author']
-
-#     visible_df = filtered_df.drop(columns_to_hide,axis=1)
-
-#     full_data_store_filtered = df_NLD[df_NLD['Status'].isin(value)]
-#     full_data_store_filtered.dropna(subset=['Datafile'],inplace=True)
-#     full_data_store_filtered = full_data_store_filtered.reset_index()
-    
-
-#     return [visible_df.to_dict('records'), full_data_store_filtered.to_dict('records')]
-
-
-# ------------------------------------------------- 4) Display radio buttons after data selection --------------------------------------------------
+# ------------------------------------------------- 2) Display radio buttons after data selection --------------------------------------------------
 
 # callbacks to show the radio buttons after data has been selected.
 @callback(
@@ -578,7 +220,7 @@ def trigger_split_btn(selected_data):
 
         return {'display': 'none'}
 
-# ---------------------------------------------------- 5) Main Functions ------------------------------------
+# ---------------------------------------------------- 3) Main Functions ------------------------------------
 
 # callback to display the figures and the fits
 # Input 1: selected data sets from data table -- Input('data_log_table','derived_virtual_selected_rows')
@@ -679,25 +321,12 @@ def plot_selected_data(derived_virtual_selected_rows,value,value_fit,n_clicks,da
 
                     param_errors = np.sqrt(np.diag(pcov))
 
-                    # alpha = 0.05
-
-                    # n_params = len(popt)
-
-                    # t_value = stats.t.ppf(1 - alpha/2, df=len(x_fit) - n_params)
-
-                    # y_lower = ctm_fitting(x_fit, *(popt - t_value * param_errors))
-                    # y_upper = ctm_fitting(x_fit, *(popt + t_value * param_errors))
-
 
                     fig.add_trace(go.Scatter(x=x_fit,y=y_fit,mode='lines',
                         name='T = {}, E = {}, <br> dT = {}, dE = {}'.format(np.round(popt[0],2),np.round(popt[1],2),np.round(param_errors[0],2),
                         np.round(param_errors[1],2))))
 
-                    # fig.add_trace(go.Scatter(x=x_fit, y=y_upper, mode='lines', fill=None,line=dict(dash='dash'), 
-                    # showlegend=False))
-
-                    # fig.add_trace(go.Scatter(x=x_fit, y=y_lower, mode='lines', fill='tonexty',line=dict(dash='dash'),
-                    # showlegend=False))
+                    
 
                 elif value_fit == 'BSFG':
 
@@ -716,26 +345,13 @@ def plot_selected_data(derived_virtual_selected_rows,value,value_fit,n_clicks,da
 
                     param_errors = np.sqrt(np.diag(pcov))
 
-                    # alpha = 0.05
-
-                    # n_params = len(popt)
-
-                    # t_value = stats.t.ppf(1 - alpha/2, df=len(x_fit) - n_params)
-
-                    # y_lower = bsfg_fitting(x_fit, *(popt - t_value * param_errors))
-                    # y_upper = bsfg_fitting(x_fit, *(popt + t_value * param_errors))
-
+                    
 
                     fig.add_trace(go.Scatter(x=x_fit,y=y_fit,mode='lines',
                         name='a = {}, del = {}, <br> da = {}, ddel = {}'.format(np.round(popt[0],2),np.round(popt[1],2),np.round(param_errors[0],2),
                         np.round(param_errors[1],2))))
 
-                    # fig.add_trace(go.Scatter(x=x_fit, y=y_upper, mode='lines', fill=None,line=dict(dash='dash'), 
-                    #     showlegend=False))
-
-                    # fig.add_trace(go.Scatter(x=x_fit, y=y_lower, mode='lines', fill='tonexty',line=dict(dash='dash'),
-                    # showlegend=False))
-
+                    
 
                 elif value_fit == 'All':
 
@@ -753,26 +369,13 @@ def plot_selected_data(derived_virtual_selected_rows,value,value_fit,n_clicks,da
 
                     param_errors_bsfg = np.sqrt(np.diag(pcov_bsfg))
 
-                    # alpha = 0.05
-
-                    # n_params_bsfg = len(popt_bsfg)
-
-                    # t_value_bsfg = stats.t.ppf(1 - alpha/2, df=len(x_fit) - n_params_bsfg)
-
-                    # y_lower_bsfg = bsfg_fitting(x_fit, *(popt_bsfg - t_value_bsfg * param_errors_bsfg))
-                    # y_upper_bsfg = bsfg_fitting(x_fit, *(popt_bsfg + t_value_bsfg * param_errors_bsfg))
-
+                    
 
                     fig.add_trace(go.Scatter(x=x_fit,y=y_fit_bsfg,mode='lines',
                         name='a = {}, del = {}, <br> da = {}, ddel = {}'.format(np.round(popt_bsfg[0],2),np.round(popt_bsfg[1],2),
                         np.round(param_errors_bsfg[0],2),np.round(param_errors_bsfg[1],2))))
 
-                    # fig.add_trace(go.Scatter(x=x_fit, y=y_upper_bsfg, mode='lines', fill=None,line=dict(dash='dash'), 
-                    # showlegend=False))
-
-                    # fig.add_trace(go.Scatter(x=x_fit, y=y_lower_bsfg, mode='lines', fill='tonexty',line=dict(dash='dash'),
-                    # showlegend=False))
-
+                    
                     popt_ctm, pcov_ctm = curve_fit(ctm_fitting, xdata=x,ydata=y,sigma=dy,absolute_sigma=True)
 
                     x_fit = np.linspace(E_min, E_max,100)
@@ -781,26 +384,13 @@ def plot_selected_data(derived_virtual_selected_rows,value,value_fit,n_clicks,da
 
                     param_errors_ctm = np.sqrt(np.diag(pcov_ctm))
 
-                    # alpha = 0.05
-
-                    # n_params_ctm = len(popt_ctm)
-
-                    # t_value_ctm = stats.t.ppf(1 - alpha/2, df=len(x_fit) - n_params_ctm)
-
-                    # y_lower_ctm = ctm_fitting(x_fit, *(popt_ctm - t_value_ctm * param_errors_ctm))
-                    # y_upper_ctm = ctm_fitting(x_fit, *(popt_ctm + t_value_ctm * param_errors_ctm))
-
+                    
 
                     fig.add_trace(go.Scatter(x=x_fit,y=y_fit_ctm,mode='lines',
                         name='T = {}, E = {}, <br> dT = {}, dE = {}'.format(np.round(popt_ctm[0],2),np.round(popt_ctm[1],2),
                         np.round(param_errors_ctm[0],2),np.round(param_errors_ctm[1],2))))
 
-                    # fig.add_trace(go.Scatter(x=x_fit, y=y_upper_ctm, mode='lines', fill=None,line=dict(dash='dash'), 
-                    # showlegend=False))
-
-                    # fig.add_trace(go.Scatter(x=x_fit, y=y_lower_ctm, mode='lines', fill='tonexty',line=dict(dash='dash'),
-                    # showlegend=False))
-
+                    
 
                 graphs.append(html.Div([dcc.Graph(figure=fig)], className='graph-item'))
                 
@@ -880,26 +470,13 @@ def plot_selected_data(derived_virtual_selected_rows,value,value_fit,n_clicks,da
 
                 param_errors = np.sqrt(np.diag(pcov))
 
-                # alpha = 0.05
-
-                # n_params = len(popt)
-
-                # t_value = stats.t.ppf(1 - alpha/2, df=len(x_fit) - n_params)
-
-                # y_lower = ctm_fitting(x_fit, *(popt - t_value * param_errors))
-                # y_upper = ctm_fitting(x_fit, *(popt + t_value * param_errors))
-
+                
 
                 fig.add_trace(go.Scatter(x=x_fit,y=y_fit,mode='lines',
                     name='T = {}, E = {}, <br> dT = {}, dE = {}'.format(np.round(popt[0],2),np.round(popt[1],2),np.round(param_errors[0],2),
                         np.round(param_errors[1],2))))
 
-                # fig.add_trace(go.Scatter(x=x_fit, y=y_upper, mode='lines', fill=None,line=dict(dash='dash'), 
-                #     showlegend=False))
-
-                # fig.add_trace(go.Scatter(x=x_fit, y=y_lower, mode='lines', fill='tonexty',line=dict(dash='dash'),
-                #  showlegend=False))
-
+                
             elif value_fit == 'BSFG':
 
                 nld_data_fit = nld_data[(nld_data['E (MeV)'] > E_min) & (nld_data['E (MeV)'] < E_max+0.1)]
@@ -907,8 +484,7 @@ def plot_selected_data(derived_virtual_selected_rows,value,value_fit,n_clicks,da
                 x,y,dy = nld_data_fit['E (MeV)'],nld_data_fit['NLD'],nld_data_fit['NLD uncertainity']
                 
                 dy = np.where(dy == 0, 0.2*y, dy)
-                #lower_bound = [1e-6,-np.inf]
-                #upper_bound = [np.inf, np.inf]
+                
                 popt, pcov = curve_fit(lambda E, a, Delta: bsfg_fitting(E,a,Delta,A), xdata=x,ydata=y,sigma=dy,absolute_sigma=True)
 
                 x_fit = np.linspace(E_min, E_max,100)
@@ -917,26 +493,13 @@ def plot_selected_data(derived_virtual_selected_rows,value,value_fit,n_clicks,da
 
                 param_errors = np.sqrt(np.diag(pcov))
 
-                # alpha = 0.05
-
-                # n_params = len(popt)
-
-                # t_value = stats.t.ppf(1 - alpha/2, df=len(x_fit) - n_params)
-
-                # y_lower = bsfg_fitting(x_fit, *(popt - t_value * param_errors))
-                # y_upper = bsfg_fitting(x_fit, *(popt + t_value * param_errors))
-
+                
 
                 fig.add_trace(go.Scatter(x=x_fit,y=y_fit,mode='lines',
                     name='a = {}, del = {}, <br> da = {}, ddel = {}'.format(np.round(popt[0],2),np.round(popt[1],2),np.round(param_errors[0],2),
                         np.round(param_errors[1],2))))
 
-                # fig.add_trace(go.Scatter(x=x_fit, y=y_upper, mode='lines', fill=None,line=dict(dash='dash'), 
-                #     showlegend=False))
-
-                # fig.add_trace(go.Scatter(x=x_fit, y=y_lower, mode='lines', fill='tonexty',line=dict(dash='dash'),
-                #  showlegend=False))
-
+                
             elif value_fit == 'All':
 
                 nld_data_fit = nld_data[(nld_data['E (MeV)'] > E_min) & (nld_data['E (MeV)'] < E_max+0.1)]
@@ -953,25 +516,10 @@ def plot_selected_data(derived_virtual_selected_rows,value,value_fit,n_clicks,da
 
                 param_errors_bsfg = np.sqrt(np.diag(pcov_bsfg))
 
-                # alpha = 0.05
-
-                # n_params_bsfg = len(popt_bsfg)
-
-                # t_value_bsfg = stats.t.ppf(1 - alpha/2, df=len(x_fit) - n_params_bsfg)
-
-                # y_lower_bsfg = bsfg_fitting(x_fit, *(popt_bsfg - t_value_bsfg * param_errors_bsfg))
-                # y_upper_bsfg = bsfg_fitting(x_fit, *(popt_bsfg + t_value_bsfg * param_errors_bsfg))
-
-
+                
                 fig.add_trace(go.Scatter(x=x_fit,y=y_fit_bsfg,mode='lines',
                     name='a = {}, del = {}, <br> da = {}, ddel = {}'.format(np.round(popt_bsfg[0],2),np.round(popt_bsfg[1],2),
                         np.round(param_errors_bsfg[0],2),np.round(param_errors_bsfg[1],2))))
-
-                # fig.add_trace(go.Scatter(x=x_fit, y=y_upper_bsfg, mode='lines', fill=None,line=dict(dash='dash'), 
-                #     showlegend=False))
-
-                # fig.add_trace(go.Scatter(x=x_fit, y=y_lower_bsfg, mode='lines', fill='tonexty',line=dict(dash='dash'),
-                #  showlegend=False))
 
 
                 popt_ctm, pcov_ctm = curve_fit(ctm_fitting, xdata=x,ydata=y,sigma=dy,absolute_sigma=True)
@@ -982,27 +530,12 @@ def plot_selected_data(derived_virtual_selected_rows,value,value_fit,n_clicks,da
 
                 param_errors_ctm = np.sqrt(np.diag(pcov_ctm))
 
-                # alpha = 0.05
-
-                # n_params_ctm = len(popt_ctm)
-
-                # t_value_ctm = stats.t.ppf(1 - alpha/2, df=len(x_fit) - n_params_ctm)
-
-                # y_lower_ctm = ctm_fitting(x_fit, *(popt_ctm - t_value_ctm * param_errors_ctm))
-                # y_upper_ctm = ctm_fitting(x_fit, *(popt_ctm + t_value_ctm * param_errors_ctm))
-
-
+                
                 fig.add_trace(go.Scatter(x=x_fit,y=y_fit_ctm,mode='lines',
                     name='T = {}, E = {},<br> dT = {}, dE = {}'.format(np.round(popt_ctm[0],2),np.round(popt_ctm[1],2),
                         np.round(param_errors_ctm[0],2),np.round(param_errors_ctm[1],2))))
 
-                # fig.add_trace(go.Scatter(x=x_fit, y=y_upper_ctm, mode='lines', fill=None,line=dict(dash='dash'), 
-                #     showlegend=False))
-
-                # fig.add_trace(go.Scatter(x=x_fit, y=y_lower_ctm, mode='lines', fill='tonexty',line=dict(dash='dash'),
-                #  showlegend=False))
-
-
+                
             split_plots.append(dcc.Graph(id=f'graph-{i}',figure=fig))
           
     return [dcc.Graph(id='graph',figure=fig,style={"width":"100%","height":"60vh"})]
