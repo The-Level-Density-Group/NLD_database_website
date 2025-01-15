@@ -28,12 +28,14 @@ def view():
                 html.P('Filter by method:',id='method_filter_header'),
                 html.Div(dbc.Checklist(options=[{"label": "Evaporation", "value": 'Evaporation'},{"label": "Oslo", "value":'Oslo'},
                     {"label": "Ericson", "value":'Ericson'},{"label": "Inverse Oslo", "value":'Inverse Oslo'},{"label": "Beta Oslo", "value":'Beta Oslo'}
-                    #{"label": "Beta-n", "value":'Beta-n'},{"label": "Beta-p", "value":'Beta-p'}
+                    ,{"label": "Beta-n", "value":'Beta-n'},{"label": "Beta-p", "value":'Beta-p'}
                     ],
                     id="method_btn",inline=True,switch=True),className='method-btn'),
 
                dcc.Dropdown(id='search_by_reaction',options=[{'label': reaction, 'value': reaction} for reaction in unique_reactions],
                    placeholder="Select or type a reaction",searchable=True,clearable=True,),
+
+               html.Div(html.A(html.Button('Clear All Filters', id='clear_filter_btn',className='clear-btn'),href='/search-z-a'),className='clear-btn-container'),
 
                 #html.Div(dbc.Input(id='search_by_reaction',type='text',placeholder='Search by Reaction. E.g.: d,p or 7Li,p')),
 
@@ -49,7 +51,11 @@ def view():
                 
             ]),
 
-            html.Div(id='center-column', children=[html.Div([dash_table.DataTable(data=[],id='data_log_table', 
+
+            html.Div(id='center-column', children=[html.Div(dbc.Checklist(options=[{"label": "Select all", "value": 'select all'}],
+            id="select_btn",inline=True),className='select-btn'),
+
+            html.Div([dash_table.DataTable(data=[],id='data_log_table', 
                 #columns=[{'id': c, 'name': c,'presentation':'markdown'} for c in df_NLD.columns],
                 tooltip_header={
                 'Emin': 'Minimum energy value used for the fitting',
@@ -67,10 +73,15 @@ def view():
                     page_size=10,
                     )]),
 
+                html.Div(dbc.Checklist(options=[{"label": "Reset all", "value": 'deselect all'}],
+            id="deselect_btn",inline=True),className='deselect-btn'),
+
                 html.Div([dash_table.DataTable(data=[],id='selected_data',row_selectable='multi', 
                     style_table={'width': '100%','borderRadius': '5px','overflowX':'auto'},
                     style_header={'backgroundColor': 'rgb(30,30,30)','color': 'orange','border':'2px solid orange'},
                     style_data={'backgroundColor': 'rgb(50,50,50)','color': 'orange','border':'2px solid orange'},)],className='datatable'),
+
+                
                 
 
                 html.Div(dbc.RadioItems(options=[{"label": "Log", "value": 'log'},{"label": "Linear", "value":'linear'},],
