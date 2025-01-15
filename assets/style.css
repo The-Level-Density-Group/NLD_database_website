@@ -462,3 +462,27 @@ body {
 
 	display: none;
 }
+
+
+.clear-btn-container{
+    height: 12vh; /* Positions the button 50% down the viewport */
+    position: relative;
+}
+.clear-btn {
+    position: absolute;
+    top: 50%; /* Positions the button 50% down the viewport */
+    left: 50%; /* Positions the button 40% from the left of the viewport */
+    transform: translate(-50%, -50%); /* Adjusts for button width and height */
+    width: 100%; 
+    height: 7vh;
+    color: orange;
+    background: rgb(30,30,30);
+    border: 2px solid orange;
+    border-radius: 15px;
+    font-weight: bold;
+    font-size: 15px;
+}
+
+.clear-btn:hover {
+    background-color: #2F4F4F;
+}
