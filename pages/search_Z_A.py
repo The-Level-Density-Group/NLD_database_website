@@ -136,13 +136,11 @@ def update_table(A, Z, value_method, value_reaction, value_status):
     if value_status:
         filtered_df = filtered_df[filtered_df['Status'].isin(value_status)]
         full_data_store = full_data_store[full_data_store['Status'].isin(value_status)]
+    
+    filtered_df =  filtered_df.reset_index()
 
-    # Drop unnecessary columns and return the data
-    # filtered_df.dropna(subset=['Datafile'],inplace=True)
-    # filtered_df =  filtered_df.reset_index()
+    full_data_store =  full_data_store.reset_index()
 
-    # full_data_store.dropna(subset=['Datafile'],inplace=True)
-    # full_data_store =  full_data_store.reset_index()
 
     columns_to_hide = ['ID','Exrange','Datafile', 'Author','Distance','Status','Deformation','Comments']
     visible_df = filtered_df.drop(columns_to_hide, axis=1)
@@ -151,6 +149,42 @@ def update_table(A, Z, value_method, value_reaction, value_status):
 
 
 # ------------------------------------------------- 2) Display radio buttons after data selection --------------------------------------------------
+
+# callbacks to show the radio buttons after data has been selected.
+@callback(
+    Output('select_btn','style'),
+    Input('data_log_table','data'))
+
+
+def trigger_select_btn(data):
+    '''Function to show the Log/Linear button after any data has been selected.
+    This function was put in for 2 reasons -- 1) To give the website a clean look 
+    2) To make things appear when they are needed. In this case, we do not need the Log/Linear scale button
+    until data has been selected and a graph is shown.
+
+    INPUTS: selected_data -- self-explanatory :)
+    OUTPUTS: The Log/Linear scaling buttons.'''
+
+    if data:
+        # display the radio buttons in block style.
+        return {'display': 'block'}
+
+    else:
+
+        return {'display': 'none'}
+
+@callback(Output('data_log_table','derived_virtual_selected_rows'),
+	Input('select_btn','value'),
+	State('data_log_table','data'),prevent_initial_call=True)
+
+def select_deselect_data(value, data):
+
+	if value:
+		return list(range(len(data)))
+
+	else:
+		return []
+		
 
 # callbacks to show the radio buttons after data has been selected.
 @callback(
@@ -200,7 +234,7 @@ def trigger_fit_btn(selected_data):
         return {'display': 'none'}
 
 @callback(
-    Output('split_unsplit_btn','style'),
+    [Output('split_unsplit_btn','style'),Output('deselect_btn','style')],
     Input('data_log_table','derived_virtual_selected_rows'),prevent_initial_call=True)
 
 
@@ -214,11 +248,13 @@ def trigger_split_btn(selected_data):
 
     if len(selected_data) > 1:
 
-        return {'display': 'block'}
+        return {'display': 'block'},{'display':'inline'}
 
     else:
 
-        return {'display': 'none'}
+        return {'display': 'none'},{'display': 'none'}
+
+
 
 # ---------------------------------------------------- 3) Main Functions ------------------------------------
 
@@ -234,10 +270,10 @@ def trigger_split_btn(selected_data):
     Output('div-graphs', 'children'),
     [Input('data_log_table','derived_virtual_selected_rows'),Input('radio_btn','value'),Input('radio_btn_fitting','value'),
     Input('split_unsplit_btn','n_clicks')],
-    State('full-data-store','data'),prevent_initial_call=True)
+    [State('full-data-store','data'),State('select_btn','value_select')],prevent_initial_call=True)
 
 
-def plot_selected_data(derived_virtual_selected_rows,value,value_fit,n_clicks,data):
+def plot_selected_data(derived_virtual_selected_rows,value,value_fit,n_clicks,data,value_select):
     '''Function to display plots of level density data sets based on user selection.
     Inputs: user selected data sets, choice of linear/log scale, choice of fitting model(s), 
     checkpoint to see if Split/Unsplit button was clicked, full data store.
@@ -250,7 +286,8 @@ def plot_selected_data(derived_virtual_selected_rows,value,value_fit,n_clicks,da
     split_plots = []
     
     # If and only if the user selects some data set in the table
-    if derived_virtual_selected_rows and data:
+    if derived_virtual_selected_rows and data or value_select:
+
 
         # by default all plots are unsplit. By default, n_clicks value has been set to 0 (even). 
         #So, if n_clicks (number of clicks on the split/unsplit button) is an odd integer, that would mean 
@@ -279,12 +316,22 @@ def plot_selected_data(derived_virtual_selected_rows,value,value_fit,n_clicks,da
                 #file_loc = '../OhioUniversity/PhD/NLDD/data_sets/' + datafile
                 nld_data = pd.read_csv(datafile,header=None,sep=',',comment='#')
 
+                if len(nld_data.columns != 3):
+                	nld_data[2] = 0.0
+
+                nld_data[2] = nld_data[2].replace(np.NaN,0.0)
+
+                # apply 20% error if error is listed as 0 or if it is missing
+                nld_data[2] = nld_data.apply(lambda row: 0.2 * row[1] if row.get(2, 0.0) == 0.0 else row.get(2, 0.0), axis=1)
+    
+
                 unnamed_cols = nld_data.filter(like='3').columns
                 if not unnamed_cols.empty:
                     nld_data.drop(columns=unnamed_cols, inplace=True)
 
                 #nld_data.drop(3, axis=1, inplace=True)
                 nld_data.rename(columns={0: "E (MeV)", 1: "NLD", 2: "NLD uncertainity"}, inplace=True)
+                print(nld_data.columns.tolist())
 
                 fig.add_trace(go.Scatter(x=nld_data['E (MeV)'],y=nld_data['NLD'],error_y=dict(type='data',array=nld_data['NLD uncertainity']),mode='markers',
                     name=f"{data_df['Author'][i]} - {data_df['Isotope'][i]}",showlegend=True))
@@ -425,6 +472,15 @@ def plot_selected_data(derived_virtual_selected_rows,value,value_fit,n_clicks,da
             #file_loc = '../OhioUniversity/PhD/NLDD/data_sets/' + datafile
 
             nld_data = pd.read_csv(datafile,header=None,sep=',',comment='#')
+
+            if len(nld_data.columns != 3):
+            	nld_data[2] = 0.0
+
+            nld_data[2] = nld_data[2].replace(np.NaN,0.0)
+
+            # apply 20% error if error is listed as 0 or if it is missing
+            nld_data[2] = nld_data.apply(lambda row: 0.2 * row[1] if row.get(2, 0.0) == 0.0 else row.get(2, 0.0), axis=1)
+    
 
             unnamed_cols = nld_data.filter(like='3').columns
             if not unnamed_cols.empty:
