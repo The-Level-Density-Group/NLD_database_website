@@ -1,6 +1,6 @@
-<div align="center">
-# The Level Density Project
-</div>
+<h1 align="center">
+The Level Density Project
+</h1>
 
 ## Description: 
 A centralized website for nuclear level density (NLD) data. The data available on the website has been sourced from different publications using various experimental techniques.
