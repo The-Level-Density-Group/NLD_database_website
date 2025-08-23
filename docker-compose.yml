@@ -2,7 +2,7 @@ version: '3.7'
 services:
 
   nld-db:
-    image: ghcr.io/the-level-density-group/nld_database_website:master
+    image: ghcr.io/the-level-density-group/nld_database_website:latest
     container_name: nld-db
     ports:
       - 80:80
