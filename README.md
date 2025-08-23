@@ -14,7 +14,7 @@ A centralized website for nuclear level density (NLD) data. The data available o
 3. Download CSV files: If the users would like to download their selected datasets for further analysis, they can download the datafiles, along with the figure, as a zip folder.
 
 ## Web address: 
-www.nld.ascsn.net
+https://nld.ascsn.net
 
 ## Programming languages used: 
 Python
