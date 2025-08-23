@@ -1,6 +1,6 @@
 # syntax=docker/dockerfile:1
 
-FROM python:3.9-slim-bullseye
+FROM python:3.13-slim-bullseye
 SHELL ["/bin/bash", "-c"]
 
 RUN mkdir wd
@@ -11,6 +11,6 @@ COPY . .
 ARG TARGETPLATFORM
 
 COPY requirements.txt .
-RUN python3.9 -m pip install -r requirements.txt
+RUN python -m pip install --upgrade pip && python -m pip install -r requirements.txt
 
 CMD [ "gunicorn", "--workers=8", "--threads=4", "-b 0.0.0.0:80", "app:server"]
