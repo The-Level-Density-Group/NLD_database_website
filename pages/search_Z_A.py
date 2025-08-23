@@ -337,7 +337,7 @@ def plot_selected_data(derived_virtual_selected_rows,value,value_fit,n_clicks,da
                 if len(nld_data.columns != 3):
                 	nld_data[2] = 0.0
 
-                nld_data[2] = nld_data[2].replace(np.NaN,0.0)
+                nld_data[2] = nld_data[2].replace(np.nan,0.0)
 
                 # apply 20% error if error is listed as 0 or if it is missing
                 nld_data[2] = nld_data.apply(lambda row: 0.2 * row[1] if row.get(2, 0.0) == 0.0 else row.get(2, 0.0), axis=1)
@@ -401,7 +401,13 @@ def plot_selected_data(derived_virtual_selected_rows,value,value_fit,n_clicks,da
 
                     dy = np.where(dy == 0, 0.2*y, dy)
                
-                    popt, pcov = curve_fit(lambda E, a, Delta: bsfg_fitting(E,a,Delta,A), xdata=x,ydata=y,sigma=dy,absolute_sigma=True)
+                    # Prevent the fit from choosing a Delta that is >= all E (which makes rho=0).
+                    # Use a reasonable initial guess and bounds: a>0 and Delta < min(E)
+                    minE = np.min(x)
+                    p0 = [max(1e-6, A/8.0), minE/2.0]
+                    bounds = ([1e-6, -50.0], [1e3, minE - 1e-6])
+                    popt, pcov = curve_fit(lambda E, a, Delta: bsfg_fitting(E,a,Delta,A), xdata=x, ydata=y,
+                                            sigma=dy, absolute_sigma=True, p0=p0, bounds=bounds, maxfev=10000)
                     
 
                     x_fit = np.linspace(E_min, E_max,100)
@@ -426,7 +432,12 @@ def plot_selected_data(derived_virtual_selected_rows,value,value_fit,n_clicks,da
 
                     dy = np.where(dy == 0, 0.2*y, dy)
                
-                    popt_bsfg, pcov_bsfg = curve_fit(lambda E, a, Delta: bsfg_fitting(E,a,Delta,A), xdata=x,ydata=y,sigma=dy,absolute_sigma=True)
+                    # BSFG fit with bounds and initial guess to avoid non-physical solutions
+                    minE = np.min(x)
+                    p0 = [max(1e-6, A/8.0), minE/2.0]
+                    bounds = ([1e-6, -50.0], [1e3, minE - 1e-6])
+                    popt_bsfg, pcov_bsfg = curve_fit(lambda E, a, Delta: bsfg_fitting(E,a,Delta,A), xdata=x, ydata=y,
+                                                     sigma=dy, absolute_sigma=True, p0=p0, bounds=bounds, maxfev=10000)
 
                     x_fit = np.linspace(E_min, E_max,100)
 
@@ -494,7 +505,7 @@ def plot_selected_data(derived_virtual_selected_rows,value,value_fit,n_clicks,da
             if len(nld_data.columns != 3):
             	nld_data[2] = 0.0
 
-            nld_data[2] = nld_data[2].replace(np.NaN,0.0)
+            nld_data[2] = nld_data[2].replace(np.nan,0.0)
 
             # apply 20% error if error is listed as 0 or if it is missing
             nld_data[2] = nld_data.apply(lambda row: 0.2 * row[1] if row.get(2, 0.0) == 0.0 else row.get(2, 0.0), axis=1)
@@ -559,7 +570,12 @@ def plot_selected_data(derived_virtual_selected_rows,value,value_fit,n_clicks,da
                 
                 dy = np.where(dy == 0, 0.2*y, dy)
                 
-                popt, pcov = curve_fit(lambda E, a, Delta: bsfg_fitting(E,a,Delta,A), xdata=x,ydata=y,sigma=dy,absolute_sigma=True)
+                # BSFG fit with bounds and initial guess to avoid non-physical solutions
+                minE = np.min(x)
+                p0 = [max(1e-6, A/8.0), minE/2.0]
+                bounds = ([1e-6, -50.0], [1e3, minE - 1e-6])
+                popt, pcov = curve_fit(lambda E, a, Delta: bsfg_fitting(E,a,Delta,A), xdata=x, ydata=y,
+                                        sigma=dy, absolute_sigma=True, p0=p0, bounds=bounds, maxfev=10000)
 
                 x_fit = np.linspace(E_min, E_max,100)
 
@@ -582,7 +598,12 @@ def plot_selected_data(derived_virtual_selected_rows,value,value_fit,n_clicks,da
 
                 dy = np.where(dy == 0, 0.2*y, dy)
                 
-                popt_bsfg, pcov_bsfg = curve_fit(lambda E, a, Delta: bsfg_fitting(E,a,Delta,A), xdata=x,ydata=y,sigma=dy,absolute_sigma=True)
+                # BSFG fit with bounds and initial guess to avoid non-physical solutions
+                minE = np.min(x)
+                p0 = [max(1e-6, A/8.0), minE/2.0]
+                bounds = ([1e-6, -50.0], [1e3, minE - 1e-6])
+                popt_bsfg, pcov_bsfg = curve_fit(lambda E, a, Delta: bsfg_fitting(E,a,Delta,A), xdata=x, ydata=y,
+                                                 sigma=dy, absolute_sigma=True, p0=p0, bounds=bounds, maxfev=10000)
 
                 x_fit = np.linspace(E_min, E_max,100)
 
