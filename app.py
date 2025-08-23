@@ -32,6 +32,24 @@ server = app.server
 
 server.wsgi_app = ProxyFix(server.wsgi_app, x_proto=1, x_host=1)
 
+
+# Prevent intermediary proxies (Cloudflare) from transforming inlined JS/CSS.
+# `no-transform` is respected by caches and transformers to avoid HTML/JS
+# minification or other alterations that can break dash-renderer.
+@server.after_request
+def set_no_transform(response):
+    try:
+        cc = response.headers.get('Cache-Control')
+        if cc:
+            if 'no-transform' not in cc:
+                response.headers['Cache-Control'] = f"{cc}, no-transform"
+        else:
+            response.headers['Cache-Control'] = 'no-transform'
+    except Exception:
+        # Don't let header handling break the app
+        pass
+    return response
+
 # Ensure Dash component libraries are registered early. In some deployment setups
 # (preloaded workers / different request timings) the component suite route
 # can be requested before Dash has collected and registered JS/CSS paths which
