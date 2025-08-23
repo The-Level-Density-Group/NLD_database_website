@@ -17,17 +17,20 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
 '''
 
 import dash
+from werkzeug.middleware.proxy_fix import ProxyFix
 from dash import Dash, html
 import dash_bootstrap_components as dbc 
 
-app = Dash(__name__, use_pages=True,external_stylesheets=[dbc.themes.BOOTSTRAP],
-     meta_tags=[
+app = Dash(__name__, use_pages=True, external_stylesheets=[dbc.themes.BOOTSTRAP],
+           meta_tags=[
         {"name": "viewport", "content": "width=device-width, initial-scale=1.0"}
     ],)
 
 app.config.suppress_callback_exceptions=True
 app.title = "Level Densities"
 server = app.server
+
+server.wsgi_app = ProxyFix(server.wsgi_app, x_proto=1, x_host=1)
 
 # Ensure Dash component libraries are registered early. In some deployment setups
 # (preloaded workers / different request timings) the component suite route
