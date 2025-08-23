@@ -29,6 +29,15 @@ app.config.suppress_callback_exceptions=True
 app.title = "Level Densities"
 server = app.server
 
+# Ensure Dash component libraries are registered early. In some deployment setups
+# (preloaded workers / different request timings) the component suite route
+# can be requested before Dash has collected and registered JS/CSS paths which
+# leads to "is not a registered library" errors. Calling these methods
+# populates `app.registered_paths` so `/__dash-component-suites/...` can be
+# served immediately.
+app._generate_scripts_html()
+app._generate_css_dist_html()
+
 # app.layout = html.Div([
     
     
