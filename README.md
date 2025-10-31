@@ -26,4 +26,4 @@ Dash, Numpy, Pandas, Scipy, Plotly
 The website is distributed under the GNU GPLv3.0 license.
 
 ## Contact:
-To contact the authors and developers of this website, please send an email to The Level Density Project's official email address listed in the website.
+To contact the authors and developers of this website, please send an email to The Level Density Project's official email address listed on the website.
