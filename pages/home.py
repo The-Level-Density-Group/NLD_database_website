@@ -28,12 +28,12 @@ df_NLD = pd.read_excel('log_book_new.xlsx')
 # layout of the homepage.
 layout = html.Div([
 	# We need a main heading.
-	html.A(html.H1('The Level Density Project',className='website_header'),href='/',className='header_banner_link'),
+	html.A(html.H1('Current Archive of Nuclear Density of Levels',className='website_header'),href='/',className='header_banner_link'),
 
 	# Content of the page.
 	html.H3('Welcome to the Level Density Project Database!',style={'textAlign':'center',}),
 
-    html.P('This database is home to experimental level density data extracted via different techniques like evaporation method, Oslo method and its variants, Ericson fluctuations, \
+    html.P('The CANDL database is home to experimental level density data extracted via different techniques like evaporation method, Oslo method and its variants, Ericson fluctuations, \
      scattering wavelet technique etc. You can search for datasets using the proton number and mass number or filter the datasets by the methods or \
      search by the type of reaction or filter the datasets by their staus (Accepted, Rejected or Probation). You can also fit any selected datasets \
      to the constant temperature (CT) model and the back-shifted Fermi gas (BSFG) model. This database has been made possible by the contributions of Chirag Rathi, \
