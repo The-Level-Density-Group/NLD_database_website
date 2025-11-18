@@ -15,7 +15,7 @@ for reactions in df_NLD['Reaction']:
 def view():
     return \
     html.Div(id="body", className="container scalable", children=[
-        html.A(html.H1('The Level Density Project',className='website_header_database'),href='/',className='header_banner_link_database'),
+        html.A(html.H1('Current Archive of Nuclear Density of Levels',className='website_header_database'),href='/',className='header_banner_link_database'),
         html.Hr(id='banner_hr'),
         html.Div(id="app-container", children=[
             html.Div(id="left-column", children=[
