@@ -71,7 +71,9 @@ def counter(data):
 
   df = pd.DataFrame(data)
 
-  target_number = len(df)
+  df_new = df.dropna(subset=['Datafile'])
+
+  target_number = len(df_new)
 
   return str(target_number)
 
