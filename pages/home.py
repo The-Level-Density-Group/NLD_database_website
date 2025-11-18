@@ -31,7 +31,7 @@ layout = html.Div([
 	html.A(html.H1('Current Archive of Nuclear Density of Levels',className='website_header'),href='/',className='header_banner_link'),
 
 	# Content of the page.
-	html.H3('Welcome to the Level Density Project Database!',style={'textAlign':'center',}),
+	html.H3('Welcome to the CANDL Database!',style={'textAlign':'center',}),
 
     html.P('The CANDL database is home to experimental level density data extracted via different techniques like evaporation method, Oslo method and its variants, Ericson fluctuations, \
      scattering wavelet technique etc. You can search for datasets using the proton number and mass number or filter the datasets by the methods or \
