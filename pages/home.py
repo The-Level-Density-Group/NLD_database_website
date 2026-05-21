@@ -36,8 +36,8 @@ layout = html.Div([
     html.P('The CANDL database is home to experimental level density data extracted via different techniques like evaporation method, Oslo method and its variants, Ericson fluctuations, \
      scattering wavelet technique etc. You can search for datasets using the proton number and mass number or filter the datasets by the methods or \
      search by the type of reaction or filter the datasets by their staus (Accepted, Rejected or Probation). You can also fit any selected datasets \
-     to the constant temperature (CT) model and the back-shifted Fermi gas (BSFG) model. This database has been made possible by the contributions of Chirag Rathi, \
-      Dr. Alexander Voinov, Kristen Leibensperger, Dr. Zach Meisel and Dr. Kyle Godbey.',className='intro_heading'),
+     to the constant temperature (CT) model and the back-shifted Fermi gas (BSFG) model. This database has been made possible by the contributions of Dr. Chirag Rathi, \
+      Dr. Alexander Voinov, Kristen Leibensperger, Dr. Zach Meisel, Dr. Kyle Godbey, Omar Gharaybeh, and Dr. Daniel Phillips.',className='intro_heading'),
 
 
     html.H4('Total Number of Available Datasets',className='dataset-counter-heading',id='dataset_heading'),
