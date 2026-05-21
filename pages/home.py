@@ -49,6 +49,14 @@ layout = html.Div([
     # A clickable button that takes you to the database.
     html.Div(html.A(html.Button('Go to Database', id='go_to_database_btn',className='database-btn'),href='/search-z-a'),className='database-btn-container'),
 
+    # Citation notice.
+    html.P([
+        'If this website was helpful to your research, please consider ',
+        html.A('citing our article', href='https://www.sciencedirect.com/science/article/pii/S0010465525005193',
+               style={'color': 'white', 'textDecoration': 'underline'}),
+        '.'
+    ], style={'color': 'white', 'fontStyle': 'italic', 'textAlign': 'center', 'marginTop': '12px', 'marginBottom': '4px'}),
+
     html.P(['If you would like to submit your dataset to this database or if you would like to inquire about an available dataset, please forward \
     	your queries to ',html.A('The Level Density Group', href='mailto:theleveldensitygroup@gmail.com',style={'color':'orange'})],
         className='contact-info-section'),

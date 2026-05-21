@@ -16,6 +16,12 @@ def view():
     return \
     html.Div(id="body", className="container scalable", children=[
         html.A(html.H1('Current Archive of Nuclear Density of Levels',className='website_header_database'),href='/',className='header_banner_link_database'),
+        html.P([
+            'If this website was helpful to your research, please consider ',
+            html.A('citing our article', href='https://www.sciencedirect.com/science/article/pii/S0010465525005193',
+                   style={'color': 'white', 'textDecoration': 'underline'}),
+            '.'
+        ], style={'color': 'white', 'fontStyle': 'italic', 'textAlign': 'center', 'marginTop': '8px', 'marginBottom': '4px'}),
         html.Hr(id='banner_hr'),
         html.Div(id="app-container", children=[
             html.Div(id="left-column", children=[
