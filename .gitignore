@@ -7,3 +7,4 @@ figs3
 ct_pysr_analysis.py
 figs/
 outputs/
+*:Zone.Identifier
