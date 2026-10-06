@@ -83,4 +83,4 @@ app._generate_css_dist_html()
 
 
 if __name__ == '__main__':
-    app.run(debug=False)
+    app.run(debug=True)
