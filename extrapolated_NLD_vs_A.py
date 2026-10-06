@@ -3,7 +3,7 @@ import re
 import numpy as np
 import matplotlib.pyplot as plt
 
-DATA_FOLDER = "data/Nuclear Level Densities"
+DATA_FOLDER = "data"
 E_TARGET    = 6.0   # MeV
 MAGIC_A = sorted({20, 58, 100, 164, 208, 4, 16, 40, 120, 48, 132, 78})
 count = 0

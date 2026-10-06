@@ -23,7 +23,7 @@ warnings.filterwarnings("ignore", category=ConvergenceWarning)
 np.seterr(invalid="ignore", divide="ignore")
 
 # path to data directory containing nuclear level density files
-data_dir = os.path.join(".", "data", "Nuclear Level Densities")
+data_dir = os.path.join(".", "data")
 # csv file listing discrete level schemes and cutoff values
 scheme_csv = "Discrete_Level_Scheme.csv"
 # zero based index of cutoff column in scheme_csv (uc)
