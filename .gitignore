@@ -2,9 +2,8 @@
 __pycache__/
 ~$*
 .DS_Store
-<<<<<<< HEAD
 utils/__init__.py
-=======
 figs3
 ct_pysr_analysis.py
->>>>>>> 4837976 (Added pie chart for the UI, added hyperlinks for the table, added analysis of each individual file in chictbsfgcomposite.py)
+figs/
+outputs/
