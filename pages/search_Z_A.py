@@ -19,7 +19,7 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
 import dash
 from dash import html, dcc, callback, Input, Output, State
 import plotly.graph_objects as go
-import pandas as pd 
+import pandas as pd
 import numpy as np
 #import dash_bootstrap_components as dbc
 #from plotly.subplots import make_subplots
@@ -31,6 +31,7 @@ from scipy.optimize import curve_fit
 from utils.webpage_view import *
 from utils.fitting_functions import *
 import re
+from openpyxl import load_workbook
 
 
 ''' -------------------------------------------- Table of Contents --------------------------------------------------
@@ -51,6 +52,40 @@ dash.register_page(__name__,title='Search by Z and A',name='Search by Z and A')
 # load the main log file.
 df_NLD = pd.read_excel('log_book_new.xlsx')
 df_NLD.dropna(subset=['Datafile'],inplace=True)
+
+
+def build_ref_url_map():
+    #Build a reference-text -> URL mapping from Excel hyperlinks and urlslist.csv.
+    ref_url_map = {}
+
+    # 1. Extract hyperlinks already embedded in the Excel file
+    try:
+        wb = load_workbook('log_book_new.xlsx', data_only=True)
+        ws = wb.active
+        REF_COL = 12  # 1-indexed column for 'Reference'
+        for row in ws.iter_rows(min_row=2, min_col=REF_COL, max_col=REF_COL):
+            cell = row[0]
+            if cell.value and cell.hyperlink:
+                ref_url_map[str(cell.value).strip()] = cell.hyperlink.target
+        wb.close()
+    except Exception:
+        pass
+
+    # 2. Merge scraped URLs from urlslist.csv
+    try:
+        urls_df = pd.read_csv('urlslist.csv')
+        for _, row in urls_df.iterrows():
+            ref = str(row['reference']).strip()
+            url = str(row.get('reference_url', '')).strip()
+            if ref and url and url.lower() != 'nan':
+                ref_url_map[ref] = url
+    except FileNotFoundError:
+        pass
+
+    return ref_url_map
+
+
+ref_url_map = build_ref_url_map()
 
 # By default Plotly displays a blank plotting area on the webpage. This function is made to avoid displaying that once the webpage is loaded.
 
@@ -89,6 +124,27 @@ def display_page(pathname):
     out = view() # The webpage layout is stored in a function called view() in utils/webpage_view.py. The entire file is imported on Line 13.
     return out
 
+
+# ---- Classified datasets modal (Automated Assessment donut) ---------------
+
+@callback(
+    Output('classified-modal', 'is_open'),
+    [Input('open-classified-modal', 'n_clicks'),
+     Input('close-classified-modal', 'n_clicks')],
+    [State('classified-modal', 'is_open')],
+    prevent_initial_call=True,
+)
+def toggle_classified_modal(n_open, n_close, is_open):
+    return not is_open
+
+
+@callback(
+    Output('nr-list', 'children'),
+    [Input('nr-scope', 'value')],
+)
+def filter_not_recommended(scope):
+    return build_not_recommended_children(scope or 'all')
+
 # ------------------------------------------------- 2.0) Inputs for Z & A --------------------------------------------------
 
 # Callback for first search criteria. Enter the proton number (Z) and it will show the mass numbers (A) that are available in the data set
@@ -119,7 +175,7 @@ def update_Z_dropdown(value):
 # prevents certain callbacks to be triggered from the beginning.
 
 @callback(
-    [Output('data_log_table', 'data'),Output('full-data-store','data')],
+    [Output('data_log_table', 'data'), Output('data_log_table', 'columns'), Output('full-data-store','data')],
     [Input('mass-number', 'value'),
      Input('proton-number', 'value'),
      Input('method_btn', 'value'),
@@ -132,15 +188,11 @@ def update_table(A, Z, value_method, value_reaction, value_status):
     filtered_df = df_NLD.copy()
     full_data_store = df_NLD.copy()
 
-    
-    # return nothing if nothing is chosen by the user.
-    # if A is None or Z is None and value_method is None and value_reaction is None and value_status is None:
-    #     return [],[]
     # Apply filters based on inputs if they are not None
     if A is not None and Z is not None:
         filtered_df = filtered_df[(filtered_df['A'] == A) & (filtered_df['Z'] == Z)]
         full_data_store = full_data_store[(full_data_store['A'] == A) & (full_data_store['Z'] ==Z)]
-        
+
     
     if value_method:
         filtered_df = filtered_df[filtered_df['Method'].isin(value_method)]
@@ -154,16 +206,34 @@ def update_table(A, Z, value_method, value_reaction, value_status):
     if value_status:
         filtered_df = filtered_df[filtered_df['Status'].isin(value_status)]
         full_data_store = full_data_store[full_data_store['Status'].isin(value_status)]
-    
-    filtered_df =  filtered_df.reset_index()
 
-    full_data_store =  full_data_store.reset_index()
-
+    filtered_df = filtered_df.reset_index()
+    full_data_store = full_data_store.reset_index()
 
     columns_to_hide = ['ID','Exrange','Datafile', 'Author','Distance','Status','Deformation','Comments']
     visible_df = filtered_df.drop(columns_to_hide, axis=1)
-    
-    return [visible_df.to_dict('records'),full_data_store.to_dict('records')]
+
+    # Format Reference column as markdown hyperlinks where URLs are available
+    if 'Reference' in visible_df.columns:
+        def format_ref(ref):
+            if pd.isna(ref) or str(ref).strip() == '':
+                return ''
+            ref_str = str(ref).strip()
+            url = ref_url_map.get(ref_str)
+            if url:
+                return f'[{ref_str}]({url})'
+            return ref_str
+        visible_df = visible_df.copy()
+        visible_df['Reference'] = visible_df['Reference'].apply(format_ref)
+
+    # Build columns list with markdown presentation for Reference
+    columns = [
+        {'id': col, 'name': col, 'presentation': 'markdown'} if col == 'Reference'
+        else {'id': col, 'name': col}
+        for col in visible_df.columns
+    ]
+
+    return [visible_df.to_dict('records'), columns, full_data_store.to_dict('records')]
 
 
 # ------------------------------------------------- 2) Display radio buttons after data selection --------------------------------------------------
