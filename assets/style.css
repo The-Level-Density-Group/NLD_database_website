@@ -504,3 +504,104 @@ body {
 .clear-btn:hover {
     background-color: #2F4F4F;
 }
+
+.donut-container {
+    margin: 1rem 0.5rem;
+    padding: 0.5rem;
+    background-color: rgb(30, 30, 30);
+    border: 2px solid orange;
+    border-radius: 15px;
+}
+
+.donut-header {
+    color: orange;
+    font-family: "Helvetica";
+    font-size: 14px;
+    font-weight: bold;
+    margin: 0.25rem 0 0.25rem 0.5rem;
+}
+
+.donut-container .js-plotly-plot,
+.donut-container .plot-container {
+    background-color: rgb(30, 30, 30) !important;
+}
+
+.view-classified-btn {
+    display: block;
+    width: 90%;
+    margin: 0.5rem auto 0.25rem auto;
+    padding: 0.4rem 0.6rem;
+    color: orange;
+    background-color: rgb(30, 30, 30);
+    border: 1.5px solid orange;
+    border-radius: 10px;
+    font-size: 13px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.view-classified-btn:hover {
+    background-color: #2F4F4F;
+}
+
+/* Classified-datasets modal */
+#classified-modal .modal-content {
+    background-color: rgb(30, 30, 30);
+    color: orange;
+    border: 2px solid orange;
+}
+
+#classified-modal .modal-header,
+#classified-modal .modal-footer {
+    border-color: orange;
+}
+
+#classified-modal .nav-tabs .nav-link {
+    color: orange;
+    background-color: rgb(50, 50, 50);
+    border-color: orange;
+}
+
+#classified-modal .nav-tabs .nav-link.active {
+    color: rgb(30, 30, 30);
+    background-color: orange;
+    border-color: orange;
+}
+
+#classified-modal .btn-close {
+    filter: invert(0.7) sepia(1) saturate(5) hue-rotate(0deg);
+}
+
+.classified-list {
+    max-height: 60vh;
+    overflow-y: auto;
+    margin-top: 0.75rem;
+    padding-right: 0.5rem;
+}
+
+.classified-row {
+    padding: 0.35rem 0.6rem;
+    border-bottom: 1px solid rgba(255, 165, 0, 0.25);
+    font-family: monospace;
+    font-size: 13px;
+}
+
+.classified-row:hover {
+    background-color: rgba(255, 165, 0, 0.08);
+}
+
+.classified-empty {
+    padding: 1rem;
+    font-style: italic;
+    color: rgba(255, 165, 0, 0.7);
+}
+
+.nr-scope-row {
+    padding: 0.4rem 0;
+    border-bottom: 1px solid rgba(255, 165, 0, 0.25);
+}
+
+.nr-scope-row label {
+    margin-right: 1rem;
+    color: orange;
+}

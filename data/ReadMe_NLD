@@ -1,0 +1,10 @@
+Level density data sets for various nuclei.
+
+Naming scheme of the files: NLD_Z_A_i.csv
+
+NLD = Nuclear Level Density
+Z = Proton number of the nucleus
+A = Mass number of the nucleus
+i = data set number of the nucleus.
+
+Columns in the data files: E (MeV), NLD value (1/MeV), Uncertainty on NLD value (1/MeV)

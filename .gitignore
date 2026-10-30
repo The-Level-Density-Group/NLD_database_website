@@ -3,3 +3,9 @@ __pycache__/
 ~$*
 .DS_Store
 utils/__init__.py
+figs3
+ct_pysr_analysis.py
+figs/
+outputs/
+*:Zone.Identifier
+ct_params/
