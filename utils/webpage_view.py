@@ -74,27 +74,47 @@ def _unassessable_reason_from_flags(row):
     return "; ".join(bits) if bits else "no valid p-value"
 
 
-# compute the three buckets
-_both_p_nan = df_flags['p_ct'].isna() & df_flags['p_b'].isna() if len(df_flags) else pd.Series([], dtype=bool)
-recommended_df = df_flags[(~df_flags['any_flagged']) & (~_both_p_nan)].copy() if len(df_flags) else df_flags.copy()
-not_recommended_df = df_flags[df_flags['any_flagged']].copy() if len(df_flags) else df_flags.copy()
-_unassessable_from_flags = df_flags[(~df_flags['any_flagged']) & _both_p_nan].copy() if len(df_flags) else df_flags.copy()
+# Default chi2 p-value threshold (matches P_VALUE_THRESHOLD in ctbsfgcomposite.py).
+# A fit is flagged when p < threshold; the user can change it on the page.
+DEFAULT_P_THRESHOLD = 0.01
 
-if len(not_recommended_df):
-    not_recommended_df['detail'] = not_recommended_df.apply(_flag_detail, axis=1)
-else:
-    not_recommended_df['detail'] = []
 
-if len(_unassessable_from_flags):
-    _unassessable_from_flags['reason'] = _unassessable_from_flags.apply(_unassessable_reason_from_flags, axis=1)
-else:
-    _unassessable_from_flags['reason'] = []
+def _apply_threshold(df, threshold):
+    """Recompute the chi/model/any flags in df for the given p-value threshold.
+    The mb (parameter-consistency) flags do not depend on the threshold."""
+    df = df.copy()
+    if not len(df):
+        return df
+    df['chi_ct_flag'] = df['p_ct'].notna() & (df['p_ct'] < threshold)
+    df['chi_b_flag'] = df['p_b'].notna() & (df['p_b'] < threshold)
+    df['ct_flagged'] = df['chi_ct_flag'] | df['mb_ct_flag'].astype(bool)
+    df['bsfg_flagged'] = df['chi_b_flag'] | df['mb_b_flag'].astype(bool)
+    df['any_flagged'] = df['ct_flagged'] | df['bsfg_flagged']
+    return df
 
-unassessable_df = pd.concat([
-    df_skipped[['file', 'Z', 'A', 'reason']],
-    _unassessable_from_flags[['file', 'Z', 'A', 'reason']],
-], ignore_index=True)
 
+def compute_buckets(threshold=DEFAULT_P_THRESHOLD):
+    """Split the datasets into (recommended, not recommended, unassessable) for a threshold."""
+    flags = _apply_threshold(df_flags, threshold)
+    if len(flags):
+        both_p_nan = flags['p_ct'].isna() & flags['p_b'].isna()
+        rec = flags[(~flags['any_flagged']) & (~both_p_nan)].copy()
+        notrec = flags[flags['any_flagged']].copy()
+        un_flags = flags[(~flags['any_flagged']) & both_p_nan].copy()
+    else:
+        rec, notrec, un_flags = flags.copy(), flags.copy(), flags.copy()
+
+    notrec['detail'] = notrec.apply(_flag_detail, axis=1) if len(notrec) else []
+    un_flags['reason'] = un_flags.apply(_unassessable_reason_from_flags, axis=1) if len(un_flags) else []
+
+    unassess = pd.concat([
+        df_skipped[['file', 'Z', 'A', 'reason']],
+        un_flags[['file', 'Z', 'A', 'reason']],
+    ], ignore_index=True)
+    return rec, notrec, unassess
+
+
+recommended_df, not_recommended_df, unassessable_df = compute_buckets(DEFAULT_P_THRESHOLD)
 n_recommended = int(len(recommended_df))
 n_not_recommended = int(len(not_recommended_df))
 n_unassessable = int(len(unassessable_df))
@@ -148,27 +168,32 @@ def _file_row(file_name, z, a, extra=None):
     return html.Div(label, className='classified-row')
 
 
-def build_recommended_children():
-    rows = [_file_row(r['file'], r['Z'], r['A']) for _, r in recommended_df.iterrows()]
+def build_recommended_children(rec_df=None):
+    rec_df = recommended_df if rec_df is None else rec_df
+    rows = [_file_row(r['file'], r['Z'], r['A']) for _, r in rec_df.iterrows()]
     return rows or [html.Div("No files in this bucket.", className='classified-empty')]
 
 
-def build_unassessable_children():
+def build_unassessable_children(un_df=None):
+    un_df = unassessable_df if un_df is None else un_df
     rows = [_file_row(r['file'], r['Z'], r['A'], extra=r['reason'])
-            for _, r in unassessable_df.iterrows()]
+            for _, r in un_df.iterrows()]
     return rows or [html.Div("No files in this bucket.", className='classified-empty')]
 
 
-def build_not_recommended_children(scope='all'):
+def build_not_recommended_children(scope='all', nr_df=None):
     #scope: 'all' | 'ct' | 'bsfg' | 'both'
-    if scope == 'ct':
-        sub = not_recommended_df[not_recommended_df['ct_flagged'] & ~not_recommended_df['bsfg_flagged']]
+    nr = not_recommended_df if nr_df is None else nr_df
+    if not len(nr):
+        sub = nr
+    elif scope == 'ct':
+        sub = nr[nr['ct_flagged'] & ~nr['bsfg_flagged']]
     elif scope == 'bsfg':
-        sub = not_recommended_df[not_recommended_df['bsfg_flagged'] & ~not_recommended_df['ct_flagged']]
+        sub = nr[nr['bsfg_flagged'] & ~nr['ct_flagged']]
     elif scope == 'both':
-        sub = not_recommended_df[not_recommended_df['ct_flagged'] & not_recommended_df['bsfg_flagged']]
+        sub = nr[nr['ct_flagged'] & nr['bsfg_flagged']]
     else:
-        sub = not_recommended_df
+        sub = nr
     rows = [_file_row(r['file'], r['Z'], r['A'], extra=r['detail']) for _, r in sub.iterrows()]
     return rows or [html.Div("No files match this filter.", className='classified-empty')]
 
@@ -178,16 +203,22 @@ def build_classified_modal():
         [
             dbc.ModalHeader(dbc.ModalTitle("Classified Datasets")),
             dbc.ModalBody([
-                dbc.Tabs(id='classified-tabs', active_tab='tab-rec', children=[
-                    dbc.Tab(
+                dcc.Tabs(id='classified-tabs', value='tab-rec', className='classified-tabs', children=[
+                    dcc.Tab(
+                        id='tab-rec-label',
                         label=f"Recommended ({n_recommended})",
-                        tab_id='tab-rec',
+                        value='tab-rec',
+                        className='classified-tab',
+                        selected_className='classified-tab--selected',
                         children=html.Div(build_recommended_children(),
-                                          className='classified-list'),
+                                          id='rec-list', className='classified-list'),
                     ),
-                    dbc.Tab(
+                    dcc.Tab(
+                        id='tab-notrec-label',
                         label=f"Not Recommended ({n_not_recommended})",
-                        tab_id='tab-notrec',
+                        value='tab-notrec',
+                        className='classified-tab',
+                        selected_className='classified-tab--selected',
                         children=html.Div([
                             html.Div(
                                 dbc.RadioItems(
@@ -207,11 +238,14 @@ def build_classified_modal():
                                      id='nr-list', className='classified-list'),
                         ]),
                     ),
-                    dbc.Tab(
+                    dcc.Tab(
+                        id='tab-un-label',
                         label=f"Unassessable ({n_unassessable})",
-                        tab_id='tab-un',
+                        value='tab-un',
+                        className='classified-tab',
+                        selected_className='classified-tab--selected',
                         children=html.Div(build_unassessable_children(),
-                                          className='classified-list'),
+                                          id='un-list', className='classified-list'),
                     ),
                 ]),
             ]),
@@ -261,6 +295,14 @@ def view():
 
                 html.Div([
                     html.P('Automated Assessment:', className='donut-header'),
+                    html.Div([
+                        html.Label('p-value threshold:', htmlFor='p-threshold',
+                                   className='p-threshold-label'),
+                        dcc.Input(id='p-threshold', type='number',
+                                  value=DEFAULT_P_THRESHOLD, min=0, max=1, step='any',
+                                  debounce=True, className='p-threshold-input'),
+                    ], className='p-threshold-row',
+                       title='A CT or BSFG fit is flagged when its chi-squared p-value is below this threshold.'),
                     dcc.Graph(
                         id='flag-donut',
                         figure=make_flag_donut(n_recommended, n_not_recommended, n_unassessable),
