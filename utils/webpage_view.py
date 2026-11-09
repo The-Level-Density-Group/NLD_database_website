@@ -178,16 +178,20 @@ def build_classified_modal():
         [
             dbc.ModalHeader(dbc.ModalTitle("Classified Datasets")),
             dbc.ModalBody([
-                dbc.Tabs(id='classified-tabs', active_tab='tab-rec', children=[
-                    dbc.Tab(
+                dcc.Tabs(id='classified-tabs', value='tab-rec', className='classified-tabs', children=[
+                    dcc.Tab(
                         label=f"Recommended ({n_recommended})",
-                        tab_id='tab-rec',
+                        value='tab-rec',
+                        className='classified-tab',
+                        selected_className='classified-tab--selected',
                         children=html.Div(build_recommended_children(),
                                           className='classified-list'),
                     ),
-                    dbc.Tab(
+                    dcc.Tab(
                         label=f"Not Recommended ({n_not_recommended})",
-                        tab_id='tab-notrec',
+                        value='tab-notrec',
+                        className='classified-tab',
+                        selected_className='classified-tab--selected',
                         children=html.Div([
                             html.Div(
                                 dbc.RadioItems(
@@ -207,9 +211,11 @@ def build_classified_modal():
                                      id='nr-list', className='classified-list'),
                         ]),
                     ),
-                    dbc.Tab(
+                    dcc.Tab(
                         label=f"Unassessable ({n_unassessable})",
-                        tab_id='tab-un',
+                        value='tab-un',
+                        className='classified-tab',
+                        selected_className='classified-tab--selected',
                         children=html.Div(build_unassessable_children(),
                                           className='classified-list'),
                     ),
