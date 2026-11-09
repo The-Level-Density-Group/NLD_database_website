@@ -138,12 +138,38 @@ def toggle_classified_modal(n_open, n_close, is_open):
     return not is_open
 
 
+def _threshold_or_default(threshold):
+    try:
+        t = float(threshold)
+    except (TypeError, ValueError):
+        return DEFAULT_P_THRESHOLD
+    return t if 0 <= t <= 1 else DEFAULT_P_THRESHOLD
+
+
 @callback(
-    Output('nr-list', 'children'),
-    [Input('nr-scope', 'value')],
+    [Output('flag-donut', 'figure'),
+     Output('tab-rec-label', 'label'),
+     Output('tab-notrec-label', 'label'),
+     Output('tab-un-label', 'label'),
+     Output('rec-list', 'children'),
+     Output('nr-list', 'children'),
+     Output('un-list', 'children')],
+    [Input('p-threshold', 'value'),
+     Input('nr-scope', 'value')],
 )
-def filter_not_recommended(scope):
-    return build_not_recommended_children(scope or 'all')
+def update_assessment(threshold, scope):
+    """Re-classify the datasets with the user's p-value threshold."""
+    rec, notrec, unassess = compute_buckets(_threshold_or_default(threshold))
+    n_rec, n_not, n_un = len(rec), len(notrec), len(unassess)
+    return (
+        make_flag_donut(n_rec, n_not, n_un),
+        f"Recommended ({n_rec})",
+        f"Not Recommended ({n_not})",
+        f"Unassessable ({n_un})",
+        build_recommended_children(rec),
+        build_not_recommended_children(scope or 'all', notrec),
+        build_unassessable_children(unassess),
+    )
 
 # ------------------------------------------------- 2.0) Inputs for Z & A --------------------------------------------------
 
